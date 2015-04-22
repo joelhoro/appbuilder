@@ -48,4 +48,4 @@ Temporary Items
 obj
 obj/Debug
 bin
-
+*.suo
