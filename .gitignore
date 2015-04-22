@@ -45,6 +45,7 @@ Temporary Items
 *.dll
 *.pdb
 *.exe
-obj/*.*
-obj/Debug/*.*
+obj
+obj/Debug
+bin
 
