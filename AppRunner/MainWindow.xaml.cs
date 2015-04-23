@@ -28,27 +28,12 @@ namespace AppRunner
         public MainWindow()
         {
             InitializeComponent();
+
             appcontrol1.DataContext = new ApplicationViewModel();
-            //var fileName = @"c:\temp\index.html";
-            //fileName = @"c:\temp\bootstrap.css";
-            //logfilecontrol1.SetContext(new LogFileViewModel(fileName));
-
             
-            var dirlistVM = new DirectoryListViewModel(@"\Users\Joel\Desktop\tests");
-            dirlist.DataContext = dirlistVM;
-            dirlist.MouseDoubleClick += (s, e) => logfilecontrol1.SetContext((s as DirectoryListControl).ActiveFile);
-            dirlist.SelectionChange += dirlist_SelectionChanged; 
-            
-            
-
-//            appcontrol2.DataContext = new ApplicationViewModel();
+            var path = @"\Users\Joel\Desktop\tests";
+            dirlist.DataContext = new DirectoryListViewModel(path);
+            dirlist.listbox.SelectionChanged += (s,e) => logfilecontrol1.SetContext((s as ListBox).SelectedItem as LogFileViewModel);
         }
-
-        void dirlist_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            MessageBox.Show("Hello");
-        }
-
-
     }
 }

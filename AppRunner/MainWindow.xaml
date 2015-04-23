@@ -11,10 +11,11 @@
                         <StackPanel>
                             <controls:ApplicationControl x:Name="appcontrol1" Margin="27,10,0,0"/>
                             <StackPanel Orientation="Horizontal"  Height="537">
-                                <controls:LogFileControl x:Name="logfilecontrol1"  Width="411" />
+                                <controls:DirectoryListControl x:Name="dirlist" HorizontalAlignment="Left" Margin="10,20,0,0" VerticalAlignment="Top" Height="480" Width="309"  />
+                                <controls:LogFileControl x:Name="logfilecontrol1" Margin="10,10,0,0.333"  Width="503" />
                             </StackPanel>
                         </StackPanel>
-                        <controls:DirectoryListControl x:Name="dirlist" HorizontalAlignment="Left" Margin="449,68,0,0" VerticalAlignment="Top" Height="375" Width="309"  />
+
                     </Grid>
                 </TabItem>
                 <TabItem Header="Insight">

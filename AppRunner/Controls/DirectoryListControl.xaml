@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <ListBox x:Name="listbox" ItemsSource="{Binding Files}" DisplayMemberPath="LogFileName"  SelectionChanged="SelectionChange">
+        <ListBox x:Name="listbox" ItemsSource="{Binding Files}" DisplayMemberPath="LogFileName">
             <!--<ListBoxItem Content="{Binding LogFileName}"></ListBoxItem>-->
         </ListBox>
     </Grid>
