@@ -12,7 +12,7 @@
         </Grid.ColumnDefinitions>
         <StackPanel Orientation="Vertical" >
             <Label Content="{Binding LogFileName}" FontWeight="Bold" FontSize="14" />
-            <TextBox Name="TextBox1" Text="{Binding FileContent}" TextWrapping="Wrap" AcceptsReturn="True"  ScrollViewer.VerticalScrollBarVisibility="Visible" Margin="7,0,10.333,0" Height="479" FontFamily="Consolas" />
+            <TextBox Name="TextBox1" Text="{Binding FileContent}" TextWrapping="Wrap" AcceptsReturn="True"  ScrollViewer.VerticalScrollBarVisibility="Visible" Margin="7,0,7.333,0" Height="479" />
         </StackPanel>
     </Grid>
 </UserControl>
