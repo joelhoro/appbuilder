@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AppRunner.Models
 {
-    class PropertyNotify : INotifyPropertyChanged
+    public class PropertyNotify : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
