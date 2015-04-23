@@ -14,6 +14,7 @@
                                 <controls:LogFileControl x:Name="logfilecontrol1"  Width="411" />
                             </StackPanel>
                         </StackPanel>
+                        <controls:DirectoryListControl x:Name="dirlist" HorizontalAlignment="Left" Margin="449,68,0,0" VerticalAlignment="Top" Height="375" Width="309"  />
                     </Grid>
                 </TabItem>
                 <TabItem Header="Insight">

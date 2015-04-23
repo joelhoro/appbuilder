@@ -53,6 +53,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\DirectoryListControl.xaml.cs">
+      <DependentUpon>DirectoryListControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\LogFileControl.xaml.cs">
       <DependentUpon>LogFileControl.xaml</DependentUpon>
     </Compile>
@@ -60,8 +63,13 @@
       <DependentUpon>ApplicationControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\ApplicationViewModel.cs" />
+    <Compile Include="Models\DirectoryListViewModel.cs" />
     <Compile Include="Models\LogFileViewModel.cs" />
     <Compile Include="Models\PropertyNotify.cs" />
+    <Page Include="Controls\DirectoryListControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\LogFileControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

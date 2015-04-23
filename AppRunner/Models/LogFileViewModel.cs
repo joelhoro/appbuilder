@@ -13,7 +13,7 @@ using System.Windows;
 
 namespace AppRunner.Models
 {
-    class LogFileViewModel : PropertyNotify
+    public class LogFileViewModel : PropertyNotify
     {
         public object parent;
 
@@ -27,15 +27,9 @@ namespace AppRunner.Models
         public void StartTimer()
         {
             var dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
-            dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
+            dispatcherTimer.Tick += new EventHandler((s,e) => NotifyPropertyChanged("FileContent"));
             dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
             dispatcherTimer.Start();
-        }
-
-        private void dispatcherTimer_Tick(object sender, EventArgs e)
-        {
-            //var x = FileContent;
-            NotifyPropertyChanged("FileContent");
         }
 
         private string logFileName;

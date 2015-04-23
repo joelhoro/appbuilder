@@ -1,7 +1,9 @@
-﻿using AppRunner.Models;
+﻿using AppRunner.Controls;
+using AppRunner.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -18,26 +20,35 @@ using System.Windows.Shapes;
 
 namespace AppRunner
 {
-
-
-
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
-
         public MainWindow()
         {
             InitializeComponent();
             appcontrol1.DataContext = new ApplicationViewModel();
-            var fileName = @"c:\temp\index.html";
-            fileName = @"c:\temp\bootstrap.css";
-            logfilecontrol1.SetContext(new LogFileViewModel(fileName));
+            //var fileName = @"c:\temp\index.html";
+            //fileName = @"c:\temp\bootstrap.css";
+            //logfilecontrol1.SetContext(new LogFileViewModel(fileName));
 
+            
+            var dirlistVM = new DirectoryListViewModel(@"\Users\Joel\Desktop\tests");
+            dirlist.DataContext = dirlistVM;
+            dirlist.MouseDoubleClick += (s, e) => logfilecontrol1.SetContext((s as DirectoryListControl).ActiveFile);
+            dirlist.SelectionChange += dirlist_SelectionChanged; 
+            
+            
 
-            appcontrol2.DataContext = new ApplicationViewModel();
+//            appcontrol2.DataContext = new ApplicationViewModel();
         }
+
+        void dirlist_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            MessageBox.Show("Hello");
+        }
+
 
     }
 }
