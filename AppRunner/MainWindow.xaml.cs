@@ -28,13 +28,9 @@ namespace AppRunner
         public MainWindow()
         {
             InitializeComponent();
-
-            appcontrol1.DataContext = new ApplicationViewModel();
-            
             var path = @"\Users\Joel\Desktop\tests";
-            dirlist.DataContext = new DirectoryListViewModel(path);
+            dirlist.SetContext(new DirectoryListViewModel(path));
             dirlist.fileGrid.SelectionChanged += (s,e) => logfilecontrol1.SetContext((s as DataGrid).SelectedItem as LogFileViewModel);
-            //dirlist//
         }
     }
 }

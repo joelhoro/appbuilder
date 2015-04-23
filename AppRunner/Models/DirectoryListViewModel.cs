@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Data;
 
 namespace AppRunner.Models
 {
@@ -22,20 +23,22 @@ namespace AppRunner.Models
             DirectoryName = path;
         }
 
-        public void Refresh()
-        {
-            NotifyPropertyChanged("Files");
-        }
-
         public string FullPath { get { return String.Format("\\\\{0}\\{1}", Host, DirectoryName ); } }
 
-        public ObservableCollection<LogFileViewModel> Files
+        public CollectionViewSource Files
         {
             get
             {
-                return new ObservableCollection<LogFileViewModel>( 
-                    Directory.GetFiles(FullPath,"*.*")
-                    .Select(f => new LogFileViewModel(f)) );
+                var data = new ObservableCollection<LogFileViewModel>(
+                    Directory.GetFiles(FullPath, "*.*")
+                    .Select(f => new LogFileViewModel(f)))
+                    .OrderBy(f => f.AppName)
+                    .ThenByDescending(f => f.CreationDate);
+
+                var cvs = new CollectionViewSource();
+                cvs.Source = data;
+                cvs.GroupDescriptions.Add(new PropertyGroupDescription("AppName"));
+                return cvs;
             }
         }
 

@@ -48,11 +48,18 @@ namespace AppRunner.Models
         {
             get
             {
-                StreamReader streamReader = new StreamReader(FullFileName);
-                string text = streamReader.ReadToEnd();
-                streamReader.Close();
-                var s = DateTime.Now.ToString();
-                return  s + "\n\n" + text;
+                string text;
+                try
+                {
+                    StreamReader streamReader = new StreamReader(FullFileName);
+                    text = streamReader.ReadToEnd();
+                    streamReader.Close();
+                }
+                catch
+                {
+                    text = String.Format("Could not open {0}", fullFileName);
+                }
+                return text;
             }
             set { }
         }

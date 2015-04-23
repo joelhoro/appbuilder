@@ -11,7 +11,7 @@
             <ColumnDefinition Width="13*"/>
         </Grid.ColumnDefinitions>
         <StackPanel Orientation="Vertical" >
-            <Label Content="{Binding LogFileName}" FontWeight="Bold" FontSize="14" />
+            <Label Content="{Binding FullFileName}" FontWeight="Bold" FontSize="14" />
             <TextBox Name="TextBox1" Text="{Binding FileContent}" TextWrapping="Wrap" AcceptsReturn="True"  ScrollViewer.VerticalScrollBarVisibility="Visible" Margin="7,0,10.333,0" Height="479" FontFamily="Consolas" />
         </StackPanel>
     </Grid>

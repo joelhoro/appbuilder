@@ -27,12 +27,18 @@ namespace AppRunner.Controls
             InitializeComponent();
         }
 
-        public LogFileViewModel ActiveFile { get { return listbox.SelectedItem as LogFileViewModel; } }
+        public LogFileViewModel ActiveFile { get { return fileGrid.SelectedItem as LogFileViewModel; } }
 
         public DirectoryListViewModel ViewModel { get { return DataContext as DirectoryListViewModel; } }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.Refresh();
+            fileGrid.DataContext = ViewModel.Files;
+        }
+
+        internal void SetContext(DirectoryListViewModel directoryListViewModel)
+        {
+            DataContext = directoryListViewModel;
+            fileGrid.DataContext = ViewModel.Files;
         }
     }
 }
