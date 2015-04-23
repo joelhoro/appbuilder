@@ -28,5 +28,11 @@ namespace AppRunner.Controls
         }
 
         public LogFileViewModel ActiveFile { get { return listbox.SelectedItem as LogFileViewModel; } }
+
+        public DirectoryListViewModel ViewModel { get { return DataContext as DirectoryListViewModel; } }
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            ViewModel.Refresh();
+        }
     }
 }

@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace AppRunner.Controls
 {
@@ -36,14 +37,24 @@ namespace AppRunner.Controls
             TextBox1.ScrollToEnd();
         }
 
+        DispatcherTimer dispatcherTimer;
+
         internal void SetContext(LogFileViewModel logFileViewModel)
         {
+
             DataContext = logFileViewModel;
-            logFileViewModel.PropertyChanged += (s, e) =>
-            {
-                if (e.PropertyName == "FileContent")
-                    TextBox1.ScrollToEnd();
-            };
+            //logFileViewModel.PropertyChanged += (s, e) =>
+            //{
+            //    if (e.PropertyName == "FileContent")
+            //        TextBox1.ScrollToEnd();
+            //};
+
+            if (dispatcherTimer != null) dispatcherTimer.Stop();
+
+            dispatcherTimer = new DispatcherTimer();
+            dispatcherTimer.Tick += new EventHandler((s, e) => { if(logFileViewModel != null) logFileViewModel.UpdateContent(); });
+            dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
+            dispatcherTimer.Start();
         }
     }
 }

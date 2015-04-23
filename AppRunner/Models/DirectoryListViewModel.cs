@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AppRunner.Models
 {
-    class DirectoryListViewModel : PropertyNotify
+    public class DirectoryListViewModel : PropertyNotify
     {
         private string host;
         private string directory;
@@ -20,6 +20,11 @@ namespace AppRunner.Models
         {
             Host = host;
             DirectoryName = path;
+        }
+
+        public void Refresh()
+        {
+            NotifyPropertyChanged("Files");
         }
 
         public string FullPath { get { return String.Format("\\\\{0}\\{1}", Host, DirectoryName ); } }

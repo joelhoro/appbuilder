@@ -17,29 +17,38 @@ namespace AppRunner.Models
     {
         public object parent;
 
-        public LogFileViewModel(string fileName)
+        public LogFileViewModel(string fullFileName)
         {
-            LogFileName = fileName;
-            StartTimer();
+            FullFileName = fullFileName;
+//            StartTimer();
         }
 
+        private string fullFileName;
+        public string FullFileName { get { return fullFileName; } set { fullFileName = value; NotifyPropertyChanged(); } }
 
-        public void StartTimer()
+        public string FileName { get { return Path.GetFileName(FullFileName); } }
+
+        public void UpdateContent() { NotifyPropertyChanged("FileContent"); }
+        public double FileSize { get { return new FileInfo(FullFileName).Length; } }
+        public DateTime CreationDate { get { return File.GetCreationTime(FullFileName); } }
+
+        public string AppName
         {
-            var dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
-            dispatcherTimer.Tick += new EventHandler((s,e) => NotifyPropertyChanged("FileContent"));
-            dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
-            dispatcherTimer.Start();
+            get
+            {
+                var app = new[] { "MiniApp", "vNextApp" }
+                    .Where(appName => FileName.Contains(appName));
+                if (app.Count() == 1)
+                    return app.Single();
+                else
+                    return "Others";
+            }
         }
-
-        private string logFileName;
-        public string LogFileName { get { return logFileName; } set { logFileName = value; NotifyPropertyChanged(); } }
-
         public string FileContent
         {
             get
             {
-                StreamReader streamReader = new StreamReader(LogFileName);
+                StreamReader streamReader = new StreamReader(FullFileName);
                 string text = streamReader.ReadToEnd();
                 streamReader.Close();
                 var s = DateTime.Now.ToString();

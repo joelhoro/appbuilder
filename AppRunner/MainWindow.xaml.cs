@@ -33,7 +33,8 @@ namespace AppRunner
             
             var path = @"\Users\Joel\Desktop\tests";
             dirlist.DataContext = new DirectoryListViewModel(path);
-            dirlist.listbox.SelectionChanged += (s,e) => logfilecontrol1.SetContext((s as ListBox).SelectedItem as LogFileViewModel);
+            dirlist.fileGrid.SelectionChanged += (s,e) => logfilecontrol1.SetContext((s as DataGrid).SelectedItem as LogFileViewModel);
+            //dirlist//
         }
     }
 }
