@@ -66,6 +66,11 @@
     <Compile Include="Models\DirectoryListViewModel.cs" />
     <Compile Include="Models\LogFileViewModel.cs" />
     <Compile Include="Models\PropertyNotify.cs" />
+    <Compile Include="Utilities\Executable.cs" />
+    <Compile Include="Utilities\Extensions.cs" />
+    <Compile Include="Utilities\Shell.cs" />
+    <Compile Include="Utilities\Solution.cs" />
+    <Compile Include="Utilities\UserSettings.cs" />
     <Page Include="Controls\DirectoryListControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
