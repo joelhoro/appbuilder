@@ -18,19 +18,14 @@
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="100" />
                                 </Grid.ColumnDefinitions>-->
-                                    <Button Content="Delete" Click="ApplicationAction" Tag="{Binding}" Margin="0,0,10,0"></Button>
+                                    <Button Content="Delete" Click="ButtonCallBack" Tag="{Binding}" Margin="0,0,10,0"></Button>
                                     <controls:ApplicationControl DataContext="{Binding}" BuildButtonVisible="xxx" />
-                                    <Button Content="Build" Click="ApplicationAction" Tag="{Binding}" Margin="0,0,10,0"></Button>
-                                    <!--<ProgressBar Grid.Column="1" Minimum="0" Maximum="100" Value="{Binding Executable}" />-->
-                                    <Button Content="Run" Click="ApplicationAction" Tag="{Binding}" Margin="0,0,10,0"></Button>
-                                    <Button Content="Build &amp; Run" Click="ApplicationAction" Tag="{Binding}" Margin="0,0,10,0"></Button>
-
                                 </StackPanel>
                             </Grid>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
-                <Button Content="Add Application" MaxHeight="200" Click="ApplicationAction"></Button>
+                <Button Content="Add Application" MaxHeight="200" Click="ButtonCallBack"></Button>
             </StackPanel>
         </StackPanel>
     </Grid>

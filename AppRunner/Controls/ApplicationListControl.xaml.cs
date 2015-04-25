@@ -35,7 +35,7 @@ namespace AppRunner.Controls
             }
         }
 
-        private void ApplicationAction(object sender, RoutedEventArgs e)
+        private void ButtonCallBack(object sender, RoutedEventArgs e)
         {
             var action = (sender as Button).Content.ToString();
             if (action == "Delete")
@@ -45,13 +45,10 @@ namespace AppRunner.Controls
             }
             else if (action == "Add Application")
             {
-                AppListViewModel.Add(new ApplicationViewModel() );
-            }
-            else if (action == "Build")
-            {
-                var appToBuild = (sender as Button).Tag as ApplicationViewModel;
+                AppListViewModel.Add(new ApplicationViewModel());
             }
         }
+
     }
 
 }

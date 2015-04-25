@@ -1,4 +1,6 @@
-﻿using System;
+﻿using JsonPrettyPrinterPlus;
+using JsonPrettyPrinterPlus.JsonPrettyPrinterInternals;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,11 +15,21 @@ namespace AppRunner.Utilities
     {
         public static void Save<T>(string fileName, T obj)
         {
-            var fileStream = File.Create(fileName);
+            var resultsSerializer = new DataContractJsonSerializer(typeof(T));
+            var stream = new MemoryStream();
+            resultsSerializer.WriteObject(stream, obj);
+            string resultString = Encoding.Default.GetString(stream.ToArray());
 
-            var ser = new DataContractJsonSerializer(typeof(T));
-            ser.WriteObject(fileStream, obj);
-            fileStream.Close();
+            stream.Close();
+            stream.Dispose();
+
+            var resultsFile = new StreamWriter(fileName);
+            var jPrinter = new JsonPrettyPrinter(new JsonPPStrategyContext());
+            var beautifiedJson = jPrinter.PrettyPrint(resultString);
+
+            resultsFile.Write(beautifiedJson);
+            resultsFile.Flush();
+            resultsFile.Close();
         }
 
         public static T Load<T>(string fileName)

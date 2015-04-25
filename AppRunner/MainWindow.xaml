@@ -5,16 +5,14 @@
         Title="MainWindow" Height="708" Width="1255.667">
     <DockPanel>
             <Menu DockPanel.Dock="Top">
-                <MenuItem Header="_Save settings" Click="MenuItemClick" Tag="Save"/>
+            <MenuItem Header="_Settings">
+                <MenuItem Header="_Restore" Click="MenuItemClick" Tag="Restore"/>
+                <MenuItem Header="_Save" Click="MenuItemClick" Tag="Save"/>
+                <Separator/>
+                <MenuItem Header="_Edit settings" Click="MenuItemClick" Tag="Edit"/>
+            </MenuItem>
             </Menu>
             <controls:ApplicationListControl x:Name="AppListControl"></controls:ApplicationListControl>
-            <StackPanel Orientation="Horizontal">
-                <StackPanel Orientation="Vertical">
-                    <Button Content="Build"></Button>
-                    <Button Content="Run"></Button>
-                    <Button Content="Build &amp; Run"></Button>
-                </StackPanel>
-            </StackPanel>
         
         <!--<myControl:UserControl1 x:Name="mycontrol" ></myControl:UserControl1>-->
         </DockPanel>

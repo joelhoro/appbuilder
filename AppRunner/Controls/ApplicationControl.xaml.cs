@@ -49,6 +49,23 @@ namespace AppRunner.Controls
             (DataContext as ApplicationViewModel).Run();
         }
 
+        private void ApplicationAction(object sender, RoutedEventArgs e)
+        {
+            var action = (sender as Button).Content.ToString();
+            if (action == "Delete")
+            {
+                var appToRemove = (sender as Button).Tag as ApplicationViewModel;
+                //AppListViewModel.Remove(appToRemove);
+            }
+            else if (action == "Add Application")
+            {
+                //AppListViewModel.Add(new ApplicationViewModel());
+            }
+            else if (action == "Build")
+            {
+                var appToBuild = (sender as Button).Tag as ApplicationViewModel;
+            }
+        }
 
     }
 }

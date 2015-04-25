@@ -33,18 +33,37 @@ namespace AppRunner
             
             var fileName = @"c:\users\joel\documents\visual studio 2013\Projects\DummyExe\DummyExe\bin\Debug\DummyExe.exe";
 
+            LoadSettings();
             //AppEnvironment.LoadSettings();
-            AppListControl.DataContext = AppEnvironment.Settings.Applications;
             //logfilecontrol1.SetContext(executable);
         }
 
-        private void MenuItemClick(object sender, RoutedEventArgs e)
+        public void LoadSettings()
+        {
+            AppEnvironment.LoadSettings();
+            AppListControl.DataContext = AppEnvironment.Settings.Applications;
+        }
+
+        private void MenuItemClick(object sender, RoutedEventArgs evt)
         {
             var tag = (sender as MenuItem).Tag.ToString();
             switch (tag)
             {
                 case "Save":
                     AppEnvironment.SaveSettings();
+                    break;
+                case "Restore":
+                    LoadSettings();
+                    break;
+                case "Edit":
+                    var process = Process.Start("notepad.exe", AppEnvironment.SettingsFileName );
+                    Dispatcher.BeginInvoke(
+                    new Action(() =>
+                        {
+                            process.WaitForExit(); 
+                            LoadSettings(); 
+                        }));
+                    
                     break;
                 default:
                     break;
