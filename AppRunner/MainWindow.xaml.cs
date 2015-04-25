@@ -22,9 +22,6 @@ using System.Windows.Shapes;
 
 namespace AppRunner
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
@@ -37,7 +34,7 @@ namespace AppRunner
             var fileName = @"c:\users\joel\documents\visual studio 2013\Projects\DummyExe\DummyExe\bin\Debug\DummyExe.exe";
 
             //AppEnvironment.LoadSettings();
-            ApplicationListBox.DataContext = AppEnvironment.Settings.Applications;
+            AppListControl.DataContext = AppEnvironment.Settings.Applications;
             //logfilecontrol1.SetContext(executable);
         }
 
@@ -54,31 +51,5 @@ namespace AppRunner
             }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-        }
-
-        private void ApplicationRemove(object sender, RoutedEventArgs e)
-        {
-        }
-
-        private void ApplicationAction(object sender, RoutedEventArgs e)
-        {
-            var action = (sender as Button).Content.ToString();
-            var apps = (ApplicationListBox.DataContext as ObservableCollection<ApplicationViewModel>);
-            if (action == "Delete")
-            {
-                var appToRemove = (sender as Button).Tag as ApplicationViewModel;
-                apps.Remove(appToRemove);
-            }
-            else if (action == "Add Application")
-            {
-                apps.Add(new ApplicationViewModel());
-            }
-            else if (action == "Build")
-            {
-                var appToBuild = (sender as Button).Tag as ApplicationViewModel;
-            }
-        }
     }
 }

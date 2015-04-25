@@ -7,32 +7,7 @@
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="_Save settings" Click="MenuItemClick" Tag="Save"/>
             </Menu>
-
-        <StackPanel Orientation="Horizontal">
-            <StackPanel Orientation="Vertical">
-                <ListBox ItemsSource="{Binding}" x:Name="ApplicationListBox" MinWidth="300">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <Grid Margin="0,2">
-                            <StackPanel Orientation="Horizontal">
-                                <!--<Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="100" />
-                                </Grid.ColumnDefinitions>-->
-                                <Button Content="Delete" Click="ApplicationAction" Tag="{Binding}" Margin="0,0,10,0"></Button>
-                                <controls:ApplicationControl DataContext="{Binding}" />
-                                <Button Content="Build" Click="ApplicationAction" Tag="{Binding}" Margin="0,0,10,0"></Button>
-                                    <!--<ProgressBar Grid.Column="1" Minimum="0" Maximum="100" Value="{Binding Executable}" />-->
-                                <Button Content="Run" Click="ApplicationAction" Tag="{Binding}" Margin="0,0,10,0"></Button>
-                                <Button Content="Build &amp; Run" Click="ApplicationAction" Tag="{Binding}" Margin="0,0,10,0"></Button>
-
-                                </StackPanel>
-                        </Grid>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-            <Button Content="Add Application" MaxHeight="200" Click="ApplicationAction"></Button>
-            </StackPanel>
+            <controls:ApplicationListControl x:Name="AppListControl"></controls:ApplicationListControl>
             <StackPanel Orientation="Horizontal">
                 <StackPanel Orientation="Vertical">
                     <Button Content="Build"></Button>
@@ -40,7 +15,7 @@
                     <Button Content="Build &amp; Run"></Button>
                 </StackPanel>
             </StackPanel>
-        </StackPanel>
+        
         <!--<myControl:UserControl1 x:Name="mycontrol" ></myControl:UserControl1>-->
         </DockPanel>
 </Window>

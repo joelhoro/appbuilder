@@ -30,6 +30,9 @@ namespace AppRunner.Models
 
         public ApplicationViewModel()
         {
+            WorkSpace = WorkSpaceChoices.First();
+            Executable = ExecutableChoices.First();
+            CommandLineArgs = "<command line args>";
         }
 
         [DataMember]
