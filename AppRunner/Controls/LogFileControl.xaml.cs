@@ -1,6 +1,8 @@
 ﻿using AppRunner.Models;
+using AppRunner.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -55,6 +57,20 @@ namespace AppRunner.Controls
             dispatcherTimer.Tick += new EventHandler((s, e) => { if(logFileViewModel != null) logFileViewModel.UpdateContent(); });
             dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
             dispatcherTimer.Start();
+        }
+
+        internal void SetContext(Executable solution)
+        {
+            DataContext = solution;
+            DataReceivedEventHandler update = (s, e) =>
+                Dispatcher.BeginInvoke(
+                    new Action(() =>
+                    {
+                        TextBox1.Text += e.Data + "\n";
+                        TextBox1.ScrollToEnd();
+                    }));
+                
+            solution.OutputDataReceived += update;
         }
     }
 }

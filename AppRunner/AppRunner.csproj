@@ -36,6 +36,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -66,8 +67,12 @@
     <Compile Include="Models\DirectoryListViewModel.cs" />
     <Compile Include="Models\LogFileViewModel.cs" />
     <Compile Include="Models\PropertyNotify.cs" />
-    <Compile Include="Utilities\Executable.cs" />
+    <Compile Include="Utilities\Environment.cs" />
+    <Compile Include="Utilities\Executable.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Utilities\Extensions.cs" />
+    <Compile Include="Utilities\Serializer.cs" />
     <Compile Include="Utilities\Shell.cs" />
     <Compile Include="Utilities\Solution.cs" />
     <Compile Include="Utilities\UserSettings.cs" />
@@ -122,6 +127,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Assets\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

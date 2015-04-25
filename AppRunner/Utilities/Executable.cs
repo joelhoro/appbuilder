@@ -6,34 +6,49 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace AppRunner.Utilities
-{
-    public delegate void OutputChangedHandler(Executable sender, string line);
-    public class Executable
+{    
+    public class Executable : Process
     {
-        public string FileName;
-        private Process process;
-
-        public event DataReceivedEventHandler OutputChanged = (s, l) => {};
-
-        public void Run(string commandLineArgs = "", bool async = true)
+        public Executable(string fileName) : base()
         {
-            if (process != null)
+            StartInfo = new ProcessStartInfo
+                {
+                    FileName = fileName,
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true
+                };
+        }
+
+        public string FileName { get { return StartInfo.FileName; } }
+        public int PID { get { return Id; } }
+        private bool IsRunning()
+        {
+            try { Process.GetProcessById(Id); }
+            catch (InvalidOperationException) { return false; }
+            catch (ArgumentException) { return false; }
+            return true;
+        }
+
+        public void Run(string commandLineArgs = "", bool async = true, DataReceivedEventHandler eventHandler=null)
+        {
+            if (IsRunning())
                 throw new Exception("Can not run more than one process at a time");
-            process = Shell.RunCommand(FileName, commandLineArgs, OutputChanged, async: async);
+            StartInfo.Arguments = commandLineArgs;
+            if (eventHandler != null)
+                OutputDataReceived += eventHandler;
+            Start();
+            BeginOutputReadLine();
+            if (!async)
+                WaitForExit();
         }
 
         public override string ToString()
         {
             var output = "Process {0}".With(FileName);
-            if (process != null)
-                output = "[Running {0}] {1}".With(process.Id,output);
+            if (IsRunning())
+                output = "[Running {0}] {1}".With(Id,output);
             return output;
-
-        }
-        public void Abort() {
-            Console.WriteLine("Closing");
-            process.Kill();
-            process = null;
         }
     }
 }

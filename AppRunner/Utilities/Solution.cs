@@ -46,15 +46,22 @@ namespace AppRunner.Utilities
             FullPathName = String.Format(@"{0}\src\{1}\{1}.sln", root, solutionName);
         }
 
+        public event DataReceivedEventHandler OutputDataReceived = (s, e) => { };
+
+        /// <summary>
+        /// Build solution synchroniously
+        /// </summary>
+        /// <param name="outputPath"></param>
+        /// <param name="executableName"></param>
+        /// <param name="verbose"></param>
+        /// <returns></returns>
         public BuildResults Build(string outputPath, string executableName, bool verbose = false)
         {
             var args = String.Format(@"/property:OutputPath=""{0}"" ""{1}""", outputPath, FullPathName);
-
             string output;
             if (verbose)
-                output = Shell.RunMSBuild(args, l => Console.WriteLine(l));
-            else
-                output = Shell.RunMSBuild(args);
+                OutputDataReceived += (s, e) => Console.WriteLine(e.Data);
+            output = Shell.RunMSBuild(args, OutputDataReceived, async: false);
             return BuildResults.FromOutput(output);
         }
 

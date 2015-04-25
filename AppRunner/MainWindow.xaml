@@ -3,29 +3,44 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="clr-namespace:AppRunner.Controls"
         Title="MainWindow" Height="708" Width="1255.667">
-    <Grid>
-        <StackPanel Margin="0,0,0.333,9.667">
-            <StackPanel Orientation="Horizontal"  Height="537">
-                <controls:DirectoryListControl x:Name="dirlist" HorizontalAlignment="Left" Margin="10,20,0,-110.667" VerticalAlignment="Top" Height="628" Width="439"  />
-                <controls:LogFileControl x:Name="logfilecontrol1" Height="650" Width="770" />
+    <DockPanel>
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Header="_Save settings" Click="MenuItemClick" Tag="Save"/>
+            </Menu>
+
+        <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Vertical">
+                <ListBox ItemsSource="{Binding}" x:Name="ApplicationListBox" MinWidth="300">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="0,2">
+                            <StackPanel Orientation="Horizontal">
+                                <!--<Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="100" />
+                                </Grid.ColumnDefinitions>-->
+                                <Button Content="Delete" Click="ApplicationAction" Tag="{Binding}" Margin="0,0,10,0"></Button>
+                                <controls:ApplicationControl DataContext="{Binding}" />
+                                <Button Content="Build" Click="ApplicationAction" Tag="{Binding}" Margin="0,0,10,0"></Button>
+                                    <!--<ProgressBar Grid.Column="1" Minimum="0" Maximum="100" Value="{Binding Executable}" />-->
+                                <Button Content="Run" Click="ApplicationAction" Tag="{Binding}" Margin="0,0,10,0"></Button>
+                                <Button Content="Build &amp; Run" Click="ApplicationAction" Tag="{Binding}" Margin="0,0,10,0"></Button>
+
+                                </StackPanel>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <Button Content="Add Application" MaxHeight="200" Click="ApplicationAction"></Button>
             </StackPanel>
-
-            <!--<TabControl Height="600">
-                <TabItem Header="Hindsight">
-                    <Grid Background="#FFE5E5E5" Margin="0,3,17.333,-163">
-                        <StackPanel>
-                            <controls:ApplicationControl x:Name="appcontrol1" Margin="27,10,0,0"/>
-                        </StackPanel>
-
-                    </Grid>
-                </TabItem>
-                <TabItem Header="Insight">
-                    <Grid Background="#FFE5E5E5">
-                        <controls:ApplicationControl x:Name="appcontrol2" />
-                    </Grid>
-                </TabItem>
-            </TabControl>-->
+            <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Vertical">
+                    <Button Content="Build"></Button>
+                    <Button Content="Run"></Button>
+                    <Button Content="Build &amp; Run"></Button>
+                </StackPanel>
+            </StackPanel>
         </StackPanel>
         <!--<myControl:UserControl1 x:Name="mycontrol" ></myControl:UserControl1>-->
-    </Grid>
+        </DockPanel>
 </Window>

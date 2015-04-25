@@ -10,34 +10,19 @@ namespace AppRunner.Utilities
 {
     public static class Shell
     {
-        public static Process RunCommand(string fileName, string args, DataReceivedEventHandler eventhandler = null, bool async = true)
+        public static Executable RunCommand(string fileName, string args, DataReceivedEventHandler eventhandler = null, bool async = true)
         {
-            var process = new Process
-            {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = fileName,
-                    Arguments = args,
-                    CreateNoWindow = true,
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true
-                }
-            };
-
-            if(eventhandler != null)
-                process.OutputDataReceived += eventhandler;
-
-            process.Start();
-            process.BeginOutputReadLine();
-            if (!async)
-                process.WaitForExit();
-            return process;
+            var executable = new Executable(fileName);
+            executable.Run(args, async: async, eventHandler : eventhandler);
+            return executable;
         }
 
-        public static string RunMSBuild(string args, Action<string> callback = null)
+        public static string RunMSBuild(string args, DataReceivedEventHandler handler = null, bool async = true)
         {
-            throw new NotImplementedException();
-            //return RunCommand(UserSettings.MSBuildPath, args, callback);
+            var output = new StringBuilder();
+            DataReceivedEventHandler addToOutput = (s, e) => output.AppendLine(e.Data);
+            RunCommand(AppEnvironment.Settings.MSBuildPath, args, eventhandler: handler + addToOutput, async : async);
+            return output.ToString();
         }
 
         public static void CompileAndRun(string root, string solutionName, string executableName, string commandLineArgs)
@@ -47,7 +32,7 @@ namespace AppRunner.Utilities
             var buildResults = solution.Build(tempPath,executableName);
             if (buildResults.Success)
             {
-                var executable = new Executable { FileName = tempPath + @"\" + executableName };
+                var executable = new Executable(tempPath + @"\" + executableName);
                 executable.Run(commandLineArgs);
             }
         }
