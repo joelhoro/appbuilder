@@ -24,6 +24,7 @@ namespace AppRunner.Controls
     {
         public ApplicationListControl()
         {
+            ActiveApplicationChangeEvent = (s, e) => { };
             InitializeComponent();
         }
 
@@ -35,6 +36,8 @@ namespace AppRunner.Controls
             }
         }
 
+        public delegate void ActiveApplicationChangeEventHandler(object sender, ApplicationViewModel evt);
+        public event ActiveApplicationChangeEventHandler ActiveApplicationChangeEvent;
 
         private void ButtonCallBack(object sender, RoutedEventArgs e)
         {
@@ -52,6 +55,8 @@ namespace AppRunner.Controls
             {
                 var app = (sender as Button).Tag as ApplicationViewModel;
                 AppListViewModel.ActiveApplication = app;
+                ActiveApplicationChangeEvent(this, app);
+                //Parent.DependencyObjectType.
             }
         }
 

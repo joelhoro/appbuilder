@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text;
 using System.Windows;
 using AppRunner.Utilities;
 
@@ -46,19 +47,21 @@ namespace AppRunner.Models
             // run executable somehow
         }
 
-        private string _buildOutput = "empty";
-        public string BuildOutput { get { return _buildOutput; } }
+        private bool Flash { get { return true; } }
+
+        private StringBuilder _buildOutput = new StringBuilder();
+        public string BuildOutput { get { return _buildOutput.ToString(); } }
         public Executable Test;
         public void Build()
         {
             //Solution = new Solution(WorkSpace, Executable);
             //var outputPath = @"C:\temp\build1";
             //Solution.Build(outputPath, Executable);
-            var file = @"c:\users\joel\documents\visual studio 2013\Projects\DummyExe\DummyExe\bin\Debug\DummyExe.exe";
+            var file = @"C:\Users\Joel\Documents\Visual Studio 2013\Projects\DummyExe\DummyExe\bin\x64\Debug\DummyExe.exe";
             Test = new Executable(file);
-            //_buildOutput = "";
-            //test.OutputDataReceived += (s, e) => { _buildOutput += "."; };
-            var args = ToString();
+            _buildOutput = new StringBuilder();
+            Test.OutputDataReceived += (s, e) => { _buildOutput.AppendLine(e.Data); };
+            var args = "100 100 \"{0}\"".With(ToString());
             Test.Run(args);
         }
 

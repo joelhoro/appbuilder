@@ -17,7 +17,7 @@
             <controls:ApplicationListControl x:Name="AppListControl" HorizontalAlignment="Left" ></controls:ApplicationListControl>
             <TextBox x:Name="t" Text="waiting"></TextBox>
             <StackPanel Orientation="Horizontal">
-                <controls:LogFileControl x:Name="LogFileControl" HorizontalAlignment="Left" Height="410" />
+                <controls:LogFileControl x:Name="LogFileControl" HorizontalAlignment="Left" Height="447" Width="739" />
             </StackPanel>
         </StackPanel>
     </DockPanel>

@@ -50,26 +50,35 @@ namespace AppRunner.Controls
             //        TextBox1.ScrollToEnd();
             //};
 
+        }
+
+        public void SetContext(ApplicationViewModel application)
+        {
+            DataContext = application;
             if (dispatcherTimer != null) dispatcherTimer.Stop();
 
             dispatcherTimer = new DispatcherTimer();
-            dispatcherTimer.Tick += new EventHandler((s, e) => { if(logFileViewModel != null) logFileViewModel.UpdateContent(); });
+            dispatcherTimer.Tick += new EventHandler((s, e) =>
+            {
+                TextBox1.Background = Brushes.Black;
+                TextBox1.Foreground = Brushes.White;
+                TextBox1.Text = application.BuildOutput;
+                TextBox1.ScrollToEnd();
+            });
             dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
             dispatcherTimer.Start();
-        }
 
-        internal void SetContext(Executable solution)
-        {
-            DataContext = solution;
-            DataReceivedEventHandler update = (s, e) =>
-                Dispatcher.BeginInvoke(
-                    new Action(() =>
-                    {
-                        TextBox1.Text += e.Data + "\n";
-                        TextBox1.ScrollToEnd();
-                    }));
-                
-            solution.OutputDataReceived += update;
+            Task.Run(() =>
+            {
+                application.Test.WaitForExit();
+                Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    TextBox1.Background = Brushes.Beige;
+                    TextBox1.Foreground = Brushes.Black;
+                    dispatcherTimer.Stop();
+                    dispatcherTimer = null;
+                }));
+            });
         }
     }
 }

@@ -27,10 +27,13 @@ namespace AppRunner
             AppEnvironment.LoadSettings();
             var appListViewModel = new ApplicationListViewModel { ApplicationList = AppEnvironment.Settings.Applications };
             AppListControl.DataContext = appListViewModel;
-            //appListViewModel.ActiveApplication.PropertyChanged += (s, e) =>
-            //{
-            //    LogFileControl.Content = appListViewModel.ActiveApplication.BuildOutput;
-            //};
+            AppListControl.ActiveApplicationChangeEvent += (sender, applicationViewModel) =>
+            {
+                Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    LogFileControl.SetContext(applicationViewModel);
+                }));
+            };
         }
 
         private void MenuItemClick(object sender, RoutedEventArgs evt)

@@ -10,8 +10,11 @@
     <UserControl.Resources>
         <Style TargetType="Button">
             <Setter Property="Margin" Value="2,0,0,0"  />
+            <Setter Property="Background" Value="RoyalBlue"></Setter>
+            <Setter Property="Foreground" Value="White"></Setter>
             <Setter Property="Padding" Value="10,0,10,0"  />
         </Style>
+
     </UserControl.Resources>
 
     <Grid>
@@ -21,12 +24,13 @@
             </StackPanel.Resources>-->
             <!--<Label Content="Executable" FontSize="14"></Label>-->
 
-            <ComboBox ItemsSource="{Binding WorkSpaceChoices}" Text="{Binding WorkSpace}" Width="150" HorizontalAlignment="Left" Margin="0,0,10,0" IsSynchronizedWithCurrentItem="False"/>
-            <ComboBox ItemsSource="{Binding ExecutableChoices}" Text="{Binding Executable}" Width="150" HorizontalAlignment="Left" IsEditable="True" Margin="0,0,5,0" IsSynchronizedWithCurrentItem="False"/>
+            <ComboBox ItemsSource="{Binding WorkSpaceChoices}"  Text="{Binding WorkSpace}" Width="150" HorizontalAlignment="Left" Margin="0,0,10,0" IsSynchronizedWithCurrentItem="False" FontWeight="Bold"/>
+            <ComboBox ItemsSource="{Binding ExecutableChoices}" Text="{Binding Executable}" Width="150" HorizontalAlignment="Left" IsEditable="True" Margin="0,0,5,0" IsSynchronizedWithCurrentItem="False" FontWeight="Bold"/>
             <!--<Label Content="Args" FontSize="14" Margin="3,0" />-->
             <!--<Button Content="Testing" Visibility="{Binding BuildButtonVisible}" Margin="0,-1,10,1.4" Click="Button_Click_1"></Button>-->
             <TextBox Text="{Binding CommandLineArgs}" Width="286" />
             <Button Content="Build" Click="ApplicationAction" Tag="{Binding}" ></Button>
+            <Label x:Name="TimeElapsedLabel" Background="Beige" Foreground="White" Content="" MinWidth="95" Margin="4,0"></Label>
             <!--<ProgressBar Grid.Column="1" Minimum="0" Maximum="100" Value="{Binding Executable}" />-->
             <Button Content="Run" Click="ApplicationAction" Tag="{Binding}" ></Button>
             <Button Content="Build &amp; Run" Click="ApplicationAction" Tag="{Binding}" ></Button>

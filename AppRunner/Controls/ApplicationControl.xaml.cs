@@ -16,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using AppRunner.Utilities;
 
 namespace AppRunner.Controls
 {
@@ -36,13 +37,39 @@ namespace AppRunner.Controls
             (DataContext as ApplicationViewModel).Run();
         }
 
-        private void ApplicationAction(object sender, RoutedEventArgs e)
+        private void ApplicationAction(object sender, RoutedEventArgs evt)
         {
             var action = (sender as Button).Content.ToString();
             if (action == "Build")
             {
                 var appToBuild = (sender as Button).Tag as ApplicationViewModel;
                 appToBuild.Build();
+                var startTime = DateTime.Now;
+                appToBuild.Test.OutputDataReceived += (s, e) => Dispatcher.BeginInvoke(
+                    new Action(() =>
+                    {
+                        var minutes = (DateTime.Now - startTime).Minutes;
+                        var seconds = (DateTime.Now - startTime).Seconds;
+                        TimeElapsedLabel.Background = Brushes.CadetBlue;
+                        TimeElapsedLabel.Content = "{0}:{1:d2} elapsed".With(minutes,seconds);
+                    })
+                    );
+
+
+                Task.Run(() =>
+                {
+                    appToBuild.Test.WaitForExit();
+                    var minutes = (DateTime.Now - startTime).Minutes;
+                    var seconds = (DateTime.Now - startTime).Seconds;
+                    Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        TimeElapsedLabel.Background = Brushes.CornflowerBlue;
+                        TimeElapsedLabel.Content = "{0}:{1:d2} completed".With(minutes, seconds);
+                    } ));
+                    
+                });
+
+
             }
         }
 
