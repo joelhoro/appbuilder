@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace AppRunner.Utilities
 {
@@ -17,11 +13,11 @@ namespace AppRunner.Utilities
             return executable;
         }
 
-        public static string RunMSBuild(string args, DataReceivedEventHandler handler = null, bool async = true)
+        public static string RunMsBuild(string args, DataReceivedEventHandler handler = null, bool async = true)
         {
             var output = new StringBuilder();
             DataReceivedEventHandler addToOutput = (s, e) => output.AppendLine(e.Data);
-            RunCommand(AppEnvironment.Settings.MSBuildPath, args, eventhandler: handler + addToOutput, async : async);
+            RunCommand(AppEnvironment.Settings.MsBuildPath, args, eventhandler: handler + addToOutput, async : async);
             return output.ToString();
         }
 

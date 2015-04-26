@@ -9,18 +9,18 @@ namespace AppRunner.Models
 {
     public class ApplicationListViewModel : PropertyNotify
     {
-        private ObservableCollection<ApplicationViewModel> applicationList;
+        private ObservableCollection<ApplicationViewModel> _applicationList;
         public ObservableCollection<ApplicationViewModel> ApplicationList
         {
-            get { return applicationList; }
-            set { applicationList = value; NotifyPropertyChanged(); }
+            get { return _applicationList; }
+            set { _applicationList = value; NotifyPropertyChanged(); }
         }
 
-        private ApplicationViewModel activeApplication;
+        private ApplicationViewModel _activeApplication;
         public ApplicationViewModel ActiveApplication
         {
-            get { return activeApplication; }
-            set { activeApplication = value; NotifyPropertyChanged(); }
+            get { return _activeApplication; }
+            set { _activeApplication = value; NotifyPropertyChanged(); }
         }
 
         public void Add(ApplicationViewModel obj)

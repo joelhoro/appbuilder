@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AppRunner.Utilities
 {
@@ -61,7 +56,7 @@ namespace AppRunner.Utilities
             string output;
             if (verbose)
                 OutputDataReceived += (s, e) => Console.WriteLine(e.Data);
-            output = Shell.RunMSBuild(args, OutputDataReceived, async: false);
+            output = Shell.RunMsBuild(args, OutputDataReceived, async: false);
             return BuildResults.FromOutput(output);
         }
 

@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using AppRunner.Utilities;
 
@@ -36,14 +30,14 @@ namespace AppRunner.Models
         }
 
         [DataMember]
-        private string workSpace;
+        private string _workSpace;
         [DataMember]
-        private string executable;
+        private string _executable;
         [DataMember]
-        private string commandLineArgs;
-        public string WorkSpace { get { return workSpace; } set { workSpace = value; NotifyPropertyChanged(); } }
-        public string Executable { get { return executable; } set { executable = value; NotifyPropertyChanged(); } }
-        public string CommandLineArgs { get { return commandLineArgs; } set { commandLineArgs = value; NotifyPropertyChanged(); } }
+        private string _commandLineArgs;
+        public string WorkSpace { get { return _workSpace; } set { _workSpace = value; NotifyPropertyChanged(); } }
+        public string Executable { get { return _executable; } set { _executable = value; NotifyPropertyChanged(); } }
+        public string CommandLineArgs { get { return _commandLineArgs; } set { _commandLineArgs = value; NotifyPropertyChanged(); } }
         public Solution Solution;
 
         public void Run()
@@ -54,18 +48,18 @@ namespace AppRunner.Models
 
         private string _buildOutput = "empty";
         public string BuildOutput { get { return _buildOutput; } }
-        public Executable test;
+        public Executable Test;
         public void Build()
         {
             //Solution = new Solution(WorkSpace, Executable);
             //var outputPath = @"C:\temp\build1";
             //Solution.Build(outputPath, Executable);
             var file = @"c:\users\joel\documents\visual studio 2013\Projects\DummyExe\DummyExe\bin\Debug\DummyExe.exe";
-            test = new Executable(file);
+            Test = new Executable(file);
             //_buildOutput = "";
             //test.OutputDataReceived += (s, e) => { _buildOutput += "."; };
             var args = ToString();
-            test.Run(args);
+            Test.Run(args);
         }
 
         public override string ToString()

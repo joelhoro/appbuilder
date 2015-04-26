@@ -15,7 +15,7 @@ namespace AppRunner.Models
 {
     public class LogFileViewModel : PropertyNotify
     {
-        public object parent;
+        public object Parent;
 
         public LogFileViewModel(string fullFileName)
         {
@@ -23,11 +23,12 @@ namespace AppRunner.Models
 //            StartTimer();
         }
 
-        private string fullFileName;
-        public string FullFileName { get { return fullFileName; } set { fullFileName = value; NotifyPropertyChanged(); } }
+        private string _fullFileName;
+        public string FullFileName { get { return _fullFileName; } set { _fullFileName = value; NotifyPropertyChanged(); } }
 
         public string FileName { get { return Path.GetFileName(FullFileName); } }
 
+        // ReSharper disable once ExplicitCallerInfoArgument
         public void UpdateContent() { NotifyPropertyChanged("FileContent"); }
         public double FileSize { get { return new FileInfo(FullFileName).Length; } }
         public DateTime CreationDate { get { return File.GetCreationTime(FullFileName); } }
@@ -57,7 +58,7 @@ namespace AppRunner.Models
                 }
                 catch
                 {
-                    text = String.Format("Could not open {0}", fullFileName);
+                    text = String.Format("Could not open {0}", _fullFileName);
                 }
                 return text;
             }
