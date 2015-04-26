@@ -72,6 +72,10 @@
     <Compile Include="Controls\ApplicationControl.xaml.cs">
       <DependentUpon>ApplicationControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\UserControlNotifying.xaml.cs">
+      <DependentUpon>UserControlNotifying.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ApplicationListViewModel.cs" />
     <Compile Include="Models\ApplicationViewModel.cs" />
     <Compile Include="Models\DirectoryListViewModel.cs" />
     <Compile Include="Models\LogFileViewModel.cs" />
@@ -98,6 +102,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\ApplicationControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\UserControlNotifying.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

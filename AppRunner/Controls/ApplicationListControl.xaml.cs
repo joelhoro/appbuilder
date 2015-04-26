@@ -27,25 +27,31 @@ namespace AppRunner.Controls
             InitializeComponent();
         }
 
-        public ObservableCollection<ApplicationViewModel> AppListViewModel
+        public ApplicationListViewModel AppListViewModel
         {
             get
             {
-                return (DataContext as ObservableCollection<ApplicationViewModel>);
+                return DataContext as ApplicationListViewModel;
             }
         }
+
 
         private void ButtonCallBack(object sender, RoutedEventArgs e)
         {
             var action = (sender as Button).Content.ToString();
             if (action == "Delete")
             {
-                var appToRemove = (sender as Button).Tag as ApplicationViewModel;
-                AppListViewModel.Remove(appToRemove);
+                var app = (sender as Button).Tag as ApplicationViewModel;
+                AppListViewModel.Remove(app);
             }
             else if (action == "Add Application")
             {
                 AppListViewModel.Add(new ApplicationViewModel());
+            }
+            else if (action == "View")
+            {
+                var app = (sender as Button).Tag as ApplicationViewModel;
+                AppListViewModel.ActiveApplication = app;
             }
         }
 

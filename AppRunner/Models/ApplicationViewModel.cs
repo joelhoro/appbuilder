@@ -52,11 +52,20 @@ namespace AppRunner.Models
             // run executable somehow
         }
 
+        private string _buildOutput = "empty";
+        public string BuildOutput { get { return _buildOutput; } }
+        public Executable test;
         public void Build()
         {
-            Solution = new Solution(WorkSpace, Executable);
-            var outputPath = @"C:\temp\build1";
-            Solution.Build(outputPath, Executable);
+            //Solution = new Solution(WorkSpace, Executable);
+            //var outputPath = @"C:\temp\build1";
+            //Solution.Build(outputPath, Executable);
+            var file = @"c:\users\joel\documents\visual studio 2013\Projects\DummyExe\DummyExe\bin\Debug\DummyExe.exe";
+            test = new Executable(file);
+            //_buildOutput = "";
+            //test.OutputDataReceived += (s, e) => { _buildOutput += "."; };
+            var args = ToString();
+            test.Run(args);
         }
 
         public override string ToString()

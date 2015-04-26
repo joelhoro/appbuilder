@@ -22,21 +22,8 @@ namespace AppRunner.Controls
     /// <summary>
     /// Interaction logic for ApplicationControl.xaml
     /// </summary>
-    public partial class ApplicationControl : UserControl, INotifyPropertyChanged
+    public partial class ApplicationControl : UserControl
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        // This method is called by the Set accessor of each property. 
-        // The CallerMemberName attribute that is applied to the optional propertyName 
-        // parameter causes the property name of the caller to be substituted as an argument. 
-        protected void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-
         private string buildButtonVisible;
         public string BuildButtonVisible { get { return buildButtonVisible; } set { buildButtonVisible = value; /*NotifyPropertyChanged();*/ } }
         public ApplicationControl()
@@ -52,18 +39,10 @@ namespace AppRunner.Controls
         private void ApplicationAction(object sender, RoutedEventArgs e)
         {
             var action = (sender as Button).Content.ToString();
-            if (action == "Delete")
-            {
-                var appToRemove = (sender as Button).Tag as ApplicationViewModel;
-                //AppListViewModel.Remove(appToRemove);
-            }
-            else if (action == "Add Application")
-            {
-                //AppListViewModel.Add(new ApplicationViewModel());
-            }
-            else if (action == "Build")
+            if (action == "Build")
             {
                 var appToBuild = (sender as Button).Tag as ApplicationViewModel;
+                appToBuild.Build();
             }
         }
 

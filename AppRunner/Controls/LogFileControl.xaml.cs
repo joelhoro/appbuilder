@@ -43,7 +43,6 @@ namespace AppRunner.Controls
 
         internal void SetContext(LogFileViewModel logFileViewModel)
         {
-
             DataContext = logFileViewModel;
             //logFileViewModel.PropertyChanged += (s, e) =>
             //{
