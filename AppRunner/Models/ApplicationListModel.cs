@@ -27,12 +27,15 @@ namespace AppRunner.Models
 
         public event ActiveApplicationChangeEventHandler ActiveApplicationChangeEvent;
 
+        public static ApplicationListModel Create(IEnumerable<ApplicationModel> applicationModels)
         {
             var listModel = new ApplicationListModel();
             var i = 0;
+            applicationModels
                 .Select(a => { a.Initialize(listModel,i++); return true; })
                 .ToList();
 
+            listModel.ApplicationList = new ObservableCollection<ApplicationModel>(applicationModels);
             return listModel;
         }
 
@@ -52,4 +55,3 @@ namespace AppRunner.Models
         }
     }
 }
-

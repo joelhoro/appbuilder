@@ -49,8 +49,6 @@ namespace AppRunner.Models
             // run executable somehow
         }
 
-        private bool Flash { get { return true; } }
-
         private StringBuilder _buildOutput = new StringBuilder();
         public string BuildOutput { get { return _buildOutput.ToString(); } }
 
@@ -59,6 +57,7 @@ namespace AppRunner.Models
             Idle,
             Building,
             BuildFailed,
+            BuildSucceeded,
             Running,
             Completed
         };
@@ -66,7 +65,12 @@ namespace AppRunner.Models
         public ApplicationStatus Status
         {
             get { return _status; }
-            private set { _status = value; NotifyPropertyChanged();}
+            private set { _status = value; 
+                NotifyPropertyChanged(); 
+                NotifyPropertyChanged("CanBuild");
+                NotifyPropertyChanged("CanRun");
+                NotifyPropertyChanged("CanBuildRun");
+            }
         }
 
         public void Initialize(ApplicationListModel parent, int idx)
@@ -79,7 +83,7 @@ namespace AppRunner.Models
             Status = ApplicationStatus.Idle;
         }
 
-        public Executable Test;
+        public Executable Test; // clearly this is just for testing...
         private ApplicationStatus _status;
         private ApplicationListModel _parent;
         private int _parentIdx;
@@ -87,11 +91,24 @@ namespace AppRunner.Models
         private ApplicationStatus[] CanBuildStages
         {
             get { return new[] { ApplicationStatus.Idle, ApplicationStatus.BuildFailed, ApplicationStatus.Completed }; }  
-        } 
+        }
 
+        private ApplicationStatus[] CanRunStages
+        {
+            get { return new[] { ApplicationStatus.BuildSucceeded, ApplicationStatus.Completed }; }
+        }
+       
         public bool CanBuild
         {
             get { return CanBuildStages.Contains(Status); }
+        }
+        public bool CanRun
+        {
+            get { return CanRunStages.Contains(Status); }
+        }
+        public bool CanBuildRun
+        {
+            get { return CanBuild && CanRun; }
         }
 
         public void Build()
@@ -124,7 +141,7 @@ namespace AppRunner.Models
             string finalPath = @"{0}\{1:d3}".With(path, counter);
 
             Directory.CreateDirectory(finalPath);
-            var args = "30 \"{0} - {1}\"".With(finalPath,Executable);
+            var args = "3 \"{0} - {1}\"".With(finalPath,Executable);
             Test.Run(args);
         }
 
