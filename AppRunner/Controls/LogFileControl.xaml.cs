@@ -31,7 +31,7 @@ namespace AppRunner.Controls
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            (DataContext as ApplicationViewModel).Run();
+            (DataContext as ApplicationModel).Run();
         }
 
         internal void ScrollToEnd()
@@ -41,10 +41,10 @@ namespace AppRunner.Controls
 
         DispatcherTimer _dispatcherTimer;
 
-        internal void SetContext(LogFileViewModel logFileViewModel)
+        internal void SetContext(LogFileModel logFileModel)
         {
-            DataContext = logFileViewModel;
-            //logFileViewModel.PropertyChanged += (s, e) =>
+            DataContext = logFileModel;
+            //LogFileModel.PropertyChanged += (s, e) =>
             //{
             //    if (e.PropertyName == "FileContent")
             //        TextBox1.ScrollToEnd();
@@ -52,7 +52,7 @@ namespace AppRunner.Controls
 
         }
 
-        public void SetContext(ApplicationViewModel application)
+        public void SetContext(ApplicationModel application)
         {
             DataContext = application;
             if (_dispatcherTimer != null) _dispatcherTimer.Stop();

@@ -6,7 +6,7 @@ using System.Windows.Data;
 
 namespace AppRunner.Models
 {
-    public class DirectoryListViewModel : PropertyNotify
+    public class DirectoryListModel : PropertyNotify
     {
         private string _host;
         private string _directory;
@@ -14,7 +14,7 @@ namespace AppRunner.Models
         public string Host { get { return _host; } set { _host = value; NotifyPropertyChanged(); } }
         public string DirectoryName { get { return _directory; } set { _directory = value; NotifyPropertyChanged(); } }
 
-        public DirectoryListViewModel(string path, string host = "localhost")
+        public DirectoryListModel(string path, string host = "localhost")
         {
             Host = host;
             DirectoryName = path;
@@ -26,9 +26,9 @@ namespace AppRunner.Models
         {
             get
             {
-                var data = new ObservableCollection<LogFileViewModel>(
+                var data = new ObservableCollection<LogFileModel>(
                     Directory.GetFiles(FullPath, "*.*")
-                    .Select(f => new LogFileViewModel(f)))
+                    .Select(f => new LogFileModel(f)))
                     .OrderBy(f => f.AppName)
                     .ThenByDescending(f => f.CreationDate);
 

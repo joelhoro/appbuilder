@@ -23,8 +23,8 @@ namespace ConsoleApp
         {
             var fileName = @"C:\temp\settings.json";
             var settings = new UserSettings();
-            //settings.Applications = new List<ApplicationViewModel>() {
-            //    new ApplicationViewModel { WorkArea = @"C:\dev\p4v", Executable = "vNextApp", CommandLineArgs = "MigrateStrategy strategy=28787"  }
+            //settings.Applications = new List<ApplicationModel>() {
+            //    new ApplicationModel { WorkArea = @"C:\dev\p4v", Executable = "vNextApp", CommandLineArgs = "MigrateStrategy strategy=28787"  }
             //};
             //settings.Workspaces = new List<string>() { @"C:\dev\p4v", @"E:\dev\p4v" };
 

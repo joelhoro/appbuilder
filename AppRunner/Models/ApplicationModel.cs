@@ -11,7 +11,7 @@ using AppRunner.Utilities;
 namespace AppRunner.Models
 {
     [DataContract]
-    public class ApplicationViewModel : PropertyNotify
+    public class ApplicationModel : PropertyNotify
     {
         public ObservableCollection<string> ExecutableChoices { get { 
             return new ObservableCollection<string>() { "MiniApp", "Hindsight" };
@@ -25,7 +25,7 @@ namespace AppRunner.Models
             }
         }
 
-        public ApplicationViewModel()
+        public ApplicationModel()
         {
             WorkSpace = WorkSpaceChoices.First();
             Executable = ExecutableChoices.First();
@@ -69,7 +69,7 @@ namespace AppRunner.Models
             private set { _status = value; NotifyPropertyChanged();}
         }
 
-        public void Initialize(ApplicationListViewModel parent, int idx)
+        public void Initialize(ApplicationListModel parent, int idx)
         {
             _parent = parent;
             _parentIdx = idx;
@@ -81,8 +81,18 @@ namespace AppRunner.Models
 
         public Executable Test;
         private ApplicationStatus _status;
-        private ApplicationListViewModel _parent;
+        private ApplicationListModel _parent;
         private int _parentIdx;
+
+        private ApplicationStatus[] CanBuildStages
+        {
+            get { return new[] { ApplicationStatus.Idle, ApplicationStatus.BuildFailed, ApplicationStatus.Completed }; }  
+        } 
+
+        public bool CanBuild
+        {
+            get { return CanBuildStages.Contains(Status); }
+        }
 
         public void Build()
         {

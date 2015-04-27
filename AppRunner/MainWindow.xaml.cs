@@ -14,8 +14,8 @@ namespace AppRunner
         {
             InitializeComponent();
             //var path = @"\Users\Joel\Desktop\tests";
-            //dirlist.SetContext(new DirectoryListViewModel(path));
-            //dirlist.fileGrid.SelectionChanged += (s,e) => logfilecontrol1.SetContext((s as DataGrid).SelectedItem as LogFileViewModel);
+            //dirlist.SetContext(new DirectoryListModel(path));
+            //dirlist.fileGrid.SelectionChanged += (s,e) => logfilecontrol1.SetContext((s as DataGrid).SelectedItem as LogFileModel);
             
             var fileName = @"c:\users\joel\documents\visual studio 2013\Projects\DummyExe\DummyExe\bin\Debug\DummyExe.exe";
 
@@ -25,14 +25,14 @@ namespace AppRunner
         public void LoadSettings()
         {
             AppEnvironment.LoadSettings();
-            var appListViewModel =  ApplicationListViewModel.Create( AppEnvironment.Settings.Applications );
-            AppListControl.DataContext = appListViewModel;
-            appListViewModel.ActiveApplicationChangeEvent += (sender, args) =>
+            var appListModel =  ApplicationListModel.Create( AppEnvironment.Settings.Applications );
+            AppListControl.DataContext = appListModel;
+            appListModel.ActiveApplicationChangeEvent += (sender, args) =>
             {
-                var applicationViewModel = args as ApplicationViewModel;
+                var applicationModel = args as ApplicationModel;
                 Dispatcher.BeginInvoke(new Action(() =>
                 {
-                    LogFileControl.SetContext(applicationViewModel);
+                    LogFileControl.SetContext(applicationModel);
                 }));
             };
         }

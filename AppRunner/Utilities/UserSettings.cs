@@ -14,7 +14,7 @@ namespace AppRunner.Utilities
         public string MsBuildPath = @"""c:\Program Files (x86)\MSBuild\12.0\Bin\MSBuild.exe""";
 
         public ObservableCollection<string> Workspaces = new ObservableCollection<string>();
-        public List<ApplicationViewModel> Applications = new List<ApplicationViewModel>();
+        public List<ApplicationModel> Applications = new List<ApplicationModel>();
     }
 
     

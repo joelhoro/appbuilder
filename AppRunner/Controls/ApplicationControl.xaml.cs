@@ -35,7 +35,7 @@ namespace AppRunner.Controls
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            (DataContext as ApplicationViewModel).Run();
+            (DataContext as ApplicationModel).Run();
         }
 
         private void ApplicationAction(object sender, RoutedEventArgs evt)
@@ -43,7 +43,7 @@ namespace AppRunner.Controls
             var action = (sender as Button).Content.ToString();
             if (action == "Build")
             {
-                var appToBuild = (sender as Button).Tag as ApplicationViewModel;
+                var appToBuild = (sender as Button).Tag as ApplicationModel;
                 appToBuild.Build();
                 var startTime = DateTime.Now;
                 DataReceivedEventHandler outputChangedDelegate = (s, e) => Dispatcher.BeginInvoke(

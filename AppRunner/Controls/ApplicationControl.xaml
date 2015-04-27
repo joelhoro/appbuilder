@@ -31,7 +31,7 @@
             <TextBox Text="{Binding CommandLineArgs}" Width="286" />
             <Label Background="Beige" Content="{Binding Status}" Width="80" Margin="10,0"></Label>
             <Label x:Name="TimeElapsedLabel" Background="Beige" Foreground="White" Content="" Width="45" Margin="-4,0,4,0"></Label>
-            <Button Content="Build" Click="ApplicationAction" Tag="{Binding}" ></Button>
+            <Button Content="Build" Click="ApplicationAction" Tag="{Binding}" IsEnabled="{Binding CanBuild}"></Button>
             <!--<ProgressBar Grid.Column="1" Minimum="0" Maximum="100" Value="{Binding Executable}" />-->
             <Button Content="Run" Click="ApplicationAction" Tag="{Binding}" ></Button>
             <Button Content="Build &amp; Run" Click="ApplicationAction" Tag="{Binding}" ></Button>
