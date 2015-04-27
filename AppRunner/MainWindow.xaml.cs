@@ -25,10 +25,11 @@ namespace AppRunner
         public void LoadSettings()
         {
             AppEnvironment.LoadSettings();
-            var appListViewModel = new ApplicationListViewModel { ApplicationList = AppEnvironment.Settings.Applications };
+            var appListViewModel =  ApplicationListViewModel.Create( AppEnvironment.Settings.Applications );
             AppListControl.DataContext = appListViewModel;
-            AppListControl.ActiveApplicationChangeEvent += (sender, applicationViewModel) =>
+            appListViewModel.ActiveApplicationChangeEvent += (sender, args) =>
             {
+                var applicationViewModel = args as ApplicationViewModel;
                 Dispatcher.BeginInvoke(new Action(() =>
                 {
                     LogFileControl.SetContext(applicationViewModel);

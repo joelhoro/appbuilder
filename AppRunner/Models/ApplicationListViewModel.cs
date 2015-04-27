@@ -23,6 +23,22 @@ namespace AppRunner.Models
             set { _activeApplication = value; NotifyPropertyChanged(); }
         }
 
+        public delegate void ActiveApplicationChangeEventHandler(object sender, ApplicationViewModel args);
+
+        public event ActiveApplicationChangeEventHandler ActiveApplicationChangeEvent;
+
+        public static ApplicationListViewModel Create(IEnumerable<ApplicationViewModel> applicationViewModels)
+        {
+            var listModel = new ApplicationListViewModel();
+            var i = 0;
+            applicationViewModels
+                .Select(a => { a.Initialize(listModel,i++); return true; })
+                .ToList();
+
+            listModel.ApplicationList = new ObservableCollection<ApplicationViewModel>(applicationViewModels);
+            return listModel;
+        }
+
         public void Add(ApplicationViewModel obj)
         {
             ApplicationList.Add(obj);
@@ -30,6 +46,12 @@ namespace AppRunner.Models
         public void Remove(ApplicationViewModel obj)
         {
             ApplicationList.Remove(obj);
+        }
+
+        internal void SetActiveApplication(ApplicationViewModel app)
+        {
+            this.ActiveApplication = app;
+            ActiveApplicationChangeEvent(this, app);
         }
     }
 }

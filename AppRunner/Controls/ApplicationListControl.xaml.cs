@@ -36,9 +36,6 @@ namespace AppRunner.Controls
             }
         }
 
-        public delegate void ActiveApplicationChangeEventHandler(object sender, ApplicationViewModel evt);
-        public event ActiveApplicationChangeEventHandler ActiveApplicationChangeEvent;
-
         private void ButtonCallBack(object sender, RoutedEventArgs e)
         {
             var action = (sender as Button).Content.ToString();
@@ -54,12 +51,16 @@ namespace AppRunner.Controls
             else if (action == "View")
             {
                 var app = (sender as Button).Tag as ApplicationViewModel;
-                AppListViewModel.ActiveApplication = app;
-                ActiveApplicationChangeEvent(this, app);
-                //Parent.DependencyObjectType.
+                SetActiveApplication(app);
             }
         }
 
+        private void SetActiveApplication(ApplicationViewModel app)
+        {
+            AppListViewModel.SetActiveApplication(app);
+        }
+
+        public event ApplicationListViewModel.ActiveApplicationChangeEventHandler ActiveApplicationChangeEvent;
     }
 
 }

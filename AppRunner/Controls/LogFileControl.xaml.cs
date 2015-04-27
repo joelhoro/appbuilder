@@ -39,7 +39,7 @@ namespace AppRunner.Controls
             TextBox1.ScrollToEnd();
         }
 
-        DispatcherTimer dispatcherTimer;
+        DispatcherTimer _dispatcherTimer;
 
         internal void SetContext(LogFileViewModel logFileViewModel)
         {
@@ -55,30 +55,28 @@ namespace AppRunner.Controls
         public void SetContext(ApplicationViewModel application)
         {
             DataContext = application;
-            if (dispatcherTimer != null) dispatcherTimer.Stop();
+            if (_dispatcherTimer != null) _dispatcherTimer.Stop();
 
-            dispatcherTimer = new DispatcherTimer();
-            dispatcherTimer.Tick += new EventHandler((s, e) =>
+            _dispatcherTimer = new DispatcherTimer();
+            _dispatcherTimer.Tick += new EventHandler((s, e) =>
             {
                 TextBox1.Background = Brushes.Black;
                 TextBox1.Foreground = Brushes.White;
                 TextBox1.Text = application.BuildOutput;
                 TextBox1.ScrollToEnd();
             });
-            dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
-            dispatcherTimer.Start();
+            _dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 250);
+            _dispatcherTimer.Start();
 
-            Task.Run(() =>
-            {
-                application.Test.WaitForExit();
+            application.Test.ExecutionCompleted += (s,e) =>
                 Dispatcher.BeginInvoke(new Action(() =>
                 {
                     TextBox1.Background = Brushes.Beige;
                     TextBox1.Foreground = Brushes.Black;
-                    dispatcherTimer.Stop();
-                    dispatcherTimer = null;
+                    if(_dispatcherTimer != null)
+                        _dispatcherTimer.Stop();
+                    _dispatcherTimer = null;
                 }));
-            });
         }
     }
 }

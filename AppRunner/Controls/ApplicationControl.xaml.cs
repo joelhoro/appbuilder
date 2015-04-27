@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -45,30 +46,21 @@ namespace AppRunner.Controls
                 var appToBuild = (sender as Button).Tag as ApplicationViewModel;
                 appToBuild.Build();
                 var startTime = DateTime.Now;
-                appToBuild.Test.OutputDataReceived += (s, e) => Dispatcher.BeginInvoke(
+                DataReceivedEventHandler outputChangedDelegate = (s, e) => Dispatcher.BeginInvoke(
                     new Action(() =>
                     {
                         var minutes = (DateTime.Now - startTime).Minutes;
                         var seconds = (DateTime.Now - startTime).Seconds;
                         TimeElapsedLabel.Background = Brushes.CadetBlue;
-                        TimeElapsedLabel.Content = "{0}:{1:d2} elapsed".With(minutes,seconds);
+                        TimeElapsedLabel.Content = "{0}:{1:d2}".With(minutes,seconds);
                     })
                     );
 
-
-                Task.Run(() =>
-                {
-                    appToBuild.Test.WaitForExit();
-                    var minutes = (DateTime.Now - startTime).Minutes;
-                    var seconds = (DateTime.Now - startTime).Seconds;
-                    Dispatcher.BeginInvoke(new Action(() =>
+                appToBuild.Test.AddOutputHandler(outputChangedDelegate);
+                appToBuild.Test.ExecutionCompleted += (s,e) => Dispatcher.BeginInvoke(new Action(() =>
                     {
                         TimeElapsedLabel.Background = Brushes.CornflowerBlue;
-                        TimeElapsedLabel.Content = "{0}:{1:d2} completed".With(minutes, seconds);
-                    } ));
-                    
-                });
-
+                    } ) );
 
             }
         }
