@@ -13,6 +13,7 @@ namespace AppRunner.Models
     [DataContract]
     public class ApplicationModel : PropertyNotify
     {
+        #region Choices
         public ObservableCollection<string> ExecutableChoices { get { 
             return new ObservableCollection<string>() { "MiniApp", "Hindsight" };
         } }
@@ -24,7 +25,7 @@ namespace AppRunner.Models
                 return AppEnvironment.Settings.Workspaces;
             }
         }
-
+        #endregion
         public ApplicationModel()
         {
             WorkSpace = WorkSpaceChoices.First();
@@ -52,26 +53,6 @@ namespace AppRunner.Models
         private StringBuilder _buildOutput = new StringBuilder();
         public string BuildOutput { get { return _buildOutput.ToString(); } }
 
-        public enum ApplicationStatus
-        {
-            Idle,
-            Building,
-            BuildFailed,
-            BuildSucceeded,
-            Running,
-            Completed
-        };
-
-        public ApplicationStatus Status
-        {
-            get { return _status; }
-            private set { _status = value; 
-                NotifyPropertyChanged(); 
-                NotifyPropertyChanged("CanBuild");
-                NotifyPropertyChanged("CanRun");
-                NotifyPropertyChanged("CanBuildRun");
-            }
-        }
 
         public void Initialize(ApplicationListModel parent, int idx)
         {
@@ -87,6 +68,30 @@ namespace AppRunner.Models
         private ApplicationStatus _status;
         private ApplicationListModel _parent;
         private int _parentIdx;
+
+        #region Application status
+        public enum ApplicationStatus
+        {
+            Idle,
+            Building,
+            BuildFailed,
+            BuildSucceeded,
+            Running,
+            Completed
+        };
+
+        public ApplicationStatus Status
+        {
+            get { return _status; }
+            private set
+            {
+                _status = value;
+                NotifyPropertyChanged();
+                NotifyPropertyChanged("CanBuild");
+                NotifyPropertyChanged("CanRun");
+                NotifyPropertyChanged("CanBuildRun");
+            }
+        }
 
         private ApplicationStatus[] CanBuildStages
         {
@@ -106,10 +111,12 @@ namespace AppRunner.Models
         {
             get { return CanRunStages.Contains(Status); }
         }
+
         public bool CanBuildRun
         {
             get { return CanBuild && CanRun; }
         }
+        #endregion
 
         public void Build()
         {
