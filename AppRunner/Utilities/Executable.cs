@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace AppRunner.Utilities
 {    
     public class Executable : Process
     {
+        #region Constructor
         public Executable(string fileName) : base()
         {
             StartInfo = new ProcessStartInfo
@@ -17,6 +20,12 @@ namespace AppRunner.Utilities
                     RedirectStandardOutput = true
                 };
         }
+        #endregion
+
+        #region Events and Handling of eventhandlers
+        public delegate void ExecutionCompletedHandler(object sender, EventArgs args);
+
+        public event ExecutionCompletedHandler ExecutionCompleted = delegate { };
 
         // Don't like this, but not clear how to make sure we remove all the events
         private List<DataReceivedEventHandler> _outputHandlers = new List<DataReceivedEventHandler>();
@@ -32,6 +41,7 @@ namespace AppRunner.Utilities
             _outputHandlers.ForEach(handler => OutputDataReceived -= handler);
             _outputHandlers.Clear();
         }
+        #endregion
 
         public string FileName { get { return StartInfo.FileName; } }
         public int PID { get { return Id; } }
@@ -43,26 +53,48 @@ namespace AppRunner.Utilities
             return true;
         }
 
-        public delegate void ExecutionCompletedHandler(object sender, EventArgs args);
 
-        public event ExecutionCompletedHandler ExecutionCompleted = delegate {};
-
-        public void Run(string commandLineArgs = "", bool async = true, DataReceivedEventHandler eventHandler=null)
+        private void Run(string commandLineArgs = "", bool async = true, DataReceivedEventHandler eventHandler=null)
         {
             if (IsRunning())
                 throw new Exception("Can not run more than one process at a time");
             StartInfo.Arguments = commandLineArgs;
             AddOutputHandler(eventHandler);
             Start();
+            // Create a task that waits for the end and sends an ExecutionCompleted event when done
+            // (couldn't make the Exited event to work for some reason)
             Task.Run(() =>
             {
                 WaitForExit();
-                //OutputDataReceived -= eventHandler;
                 ExecutionCompleted(this,new EventArgs());
             });
+
             BeginOutputReadLine();
             if (!async)
                 WaitForExit();
+        }
+
+        /// <summary>
+        /// Asynchronuous version - takes eventHandler that gets invoked at every line
+        /// </summary>
+        /// <param name="commandLineArgs"></param>
+        /// <param name="eventHandler"></param>
+        public void RunAsync(string commandLineArgs = "", DataReceivedEventHandler eventHandler = null)
+        {
+            Run(commandLineArgs, async:true, eventHandler:eventHandler);
+        }
+
+        /// <summary>
+        /// Synchronuous version - returns process' output
+        /// </summary>
+        /// <param name="commandLineArgs"></param>
+        /// <returns></returns>
+        public string Run(string commandLineArgs = "")
+        {
+            var output = new StringBuilder();
+            DataReceivedEventHandler eventHandler = (s, e) => output.AppendLine(e.Data);
+            Run(commandLineArgs, async: false, eventHandler: eventHandler);
+            return output.ToString();
         }
 
         public override string ToString()

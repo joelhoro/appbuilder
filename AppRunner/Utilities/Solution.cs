@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading;
 
 namespace AppRunner.Utilities
 {
@@ -43,6 +46,8 @@ namespace AppRunner.Utilities
 
         public event DataReceivedEventHandler OutputDataReceived = (s, e) => { };
 
+        public StringBuilder BuildOutput;
+
         /// <summary>
         /// Build solution synchroniously
         /// </summary>
@@ -50,14 +55,24 @@ namespace AppRunner.Utilities
         /// <param name="executableName"></param>
         /// <param name="verbose"></param>
         /// <returns></returns>
-        public BuildResults Build(string outputPath, string executableName, bool verbose = false)
+        public BuildResults Build(string outputPath, bool verbose = false, DataReceivedEventHandler handler = null)
         {
+            BuildOutput = new StringBuilder();
             var args = String.Format(@"/property:OutputPath=""{0}"" ""{1}""", outputPath, FullPathName);
-            string output;
+            DataReceivedEventHandler addToOutput = (s, e) => BuildOutput.AppendLine(e.Data);
             if (verbose)
-                OutputDataReceived += (s, e) => Console.WriteLine(e.Data);
-            output = Shell.RunMsBuild(args, OutputDataReceived, async: false);
-            return BuildResults.FromOutput(output);
+                addToOutput += (sender, eventArgs) => Console.WriteLine(eventArgs.Data);
+            if (handler != null)
+                addToOutput += handler;
+
+            // Launch build asynchronuously but wait for completion
+            var running = true;
+            Executable.ExecutionCompletedHandler completionHandler =  (s, e) => { running = false; };
+            var executable = Shell.RunCommandAsync(AppEnvironment.Settings.MsBuildPath, args, eventhandler: addToOutput, completedHandler: completionHandler);
+            while (running)
+                Thread.Sleep(250);
+
+            return BuildResults.FromOutput(BuildOutput.ToString());
         }
 
     }

@@ -16,7 +16,7 @@ namespace ConsoleApp
         {
             var solutionName = @"c:\Users\Joel\Documents\Visual Studio 2013\Projects\DummyExe\DummyExe.sln";
             var solution = new Solution(solutionName);
-            solution.Build(@"C:\temp\dummy", "DummyExe",verbose: false);
+            Console.WriteLine(solution.Build(@"C:\temp\dummy", verbose: true));
         }
 
         static void TestSettings()
@@ -36,7 +36,8 @@ namespace ConsoleApp
 
         static void Main(string[] args)
         {
-            TestSettings();
+            //TestSettings();
+            TestBuild();
             Console.WriteLine("Done");
             Console.ReadKey();
 

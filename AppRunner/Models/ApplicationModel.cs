@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
@@ -14,9 +15,37 @@ namespace AppRunner.Models
     public class ApplicationModel : PropertyNotify
     {
         #region Choices
-        public ObservableCollection<string> ExecutableChoices { get { 
-            return new ObservableCollection<string>() { "MiniApp", "Hindsight" };
-        } }
+
+        [DataMember]
+        private ObservableCollection<string> _commandLineHistory;
+
+        public ObservableCollection<string> CommandLineHistory
+        {
+            get { return _commandLineHistory; }
+            set { _commandLineHistory = value; NotifyPropertyChanged(); }
+        } 
+        public ObservableCollection<string> SolutionChoices
+        {
+            get
+            {
+                return new ObservableCollection<string>() { "MiniApp", "Hindsight" };
+            }
+        }
+
+        public ObservableCollection<string> ExecutableChoices
+        {
+            get
+            {
+                var combinations = new Dictionary<string, ObservableCollection<string>>
+                {
+                    {"MiniApp", new ObservableCollection<string>() {"MiniApp.exe"}},
+                    {"Hindsight", new ObservableCollection<string>() {"HS.exe"}}
+                };
+                if (Solution != null && combinations.ContainsKey(Solution))
+                    return combinations[Solution];
+                else
+                    return new ObservableCollection<string>();
+            } }
 
         public ObservableCollection<string> WorkSpaceChoices
         {
@@ -36,13 +65,16 @@ namespace AppRunner.Models
         [DataMember]
         private string _workSpace;
         [DataMember]
+        private string _solution;
+        [DataMember]
         private string _executable;
         [DataMember]
         private string _commandLineArgs;
         public string WorkSpace { get { return _workSpace; } set { _workSpace = value; NotifyPropertyChanged(); } }
         public string Executable { get { return _executable; } set { _executable = value; NotifyPropertyChanged(); } }
+        public string Solution { get { return _solution; } set { _solution = value; NotifyPropertyChanged(); NotifyPropertyChanged("ExecutableChoices"); Executable = ExecutableChoices[0]; } }
         public string CommandLineArgs { get { return _commandLineArgs; } set { _commandLineArgs = value; NotifyPropertyChanged(); } }
-        public Solution Solution;
+        //public Solution Solution;
 
         public void Run()
         {
@@ -59,6 +91,7 @@ namespace AppRunner.Models
             _parent = parent;
             _parentIdx = idx;
 
+            if(CommandLineHistory == null) CommandLineHistory = new ObservableCollection<string>();
             _buildOutput = new StringBuilder();
             Test = null;
             Status = ApplicationStatus.Idle;
@@ -116,10 +149,13 @@ namespace AppRunner.Models
         {
             get { return CanBuild && CanRun; }
         }
+
         #endregion
 
         public void Build()
         {
+            if (CommandLineHistory[0] != CommandLineArgs)
+                CommandLineHistory = new ObservableCollection<string>(new[] {CommandLineArgs}.Union(CommandLineHistory));
             //Solution = new Solution(WorkSpace, Executable);
             //var outputPath = @"C:\temp\build1";
             //Solution.Build(outputPath, Executable);
@@ -149,7 +185,7 @@ namespace AppRunner.Models
 
             Directory.CreateDirectory(finalPath);
             var args = "3 \"{0} - {1}\"".With(finalPath,Executable);
-            Test.Run(args);
+            Test.RunAsync(args);
         }
 
         public override string ToString()

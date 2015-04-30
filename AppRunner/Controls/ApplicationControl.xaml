@@ -24,9 +24,10 @@
             </StackPanel.Resources>-->
             <!--<Label Content="Executable" FontSize="14"></Label>-->
 
-            <ComboBox ItemsSource="{Binding WorkSpaceChoices}"  Text="{Binding WorkSpace}" Width="150" HorizontalAlignment="Left" Margin="0,0,10,0" IsSynchronizedWithCurrentItem="False" FontWeight="Bold"/>
-            <ComboBox ItemsSource="{Binding ExecutableChoices}" Text="{Binding Executable}" Width="150" HorizontalAlignment="Left" IsEditable="True" Margin="0,0,5,0" IsSynchronizedWithCurrentItem="False" FontWeight="Bold"/>
-            <TextBox Text="{Binding CommandLineArgs}" Width="286" />
+            <ComboBox ItemsSource="{Binding WorkSpaceChoices}"  Text="{Binding WorkSpace}" Width="83" HorizontalAlignment="Left" Margin="0,0,10,-0.4" IsSynchronizedWithCurrentItem="False" FontWeight="Bold"/>
+            <ComboBox ItemsSource="{Binding SolutionChoices}" Text="{Binding Solution}" Width="87" HorizontalAlignment="Left" IsEditable="True" Margin="0,0,5,-0.4" IsSynchronizedWithCurrentItem="False" FontWeight="Bold"/>
+            <ComboBox ItemsSource="{Binding ExecutableChoices}" Text="{Binding Executable}" Width="95" HorizontalAlignment="Left" IsEditable="True" Margin="0,0,5,-0.4" IsSynchronizedWithCurrentItem="False" FontWeight="Bold"/>
+            <ComboBox ItemsSource="{Binding CommandLineHistory}" Text="{Binding CommandLineArgs}" Width="345" HorizontalAlignment="Left" IsEditable="True" Margin="0,0,5,-0.4" IsSynchronizedWithCurrentItem="False" FontWeight="Bold"/>
             <Label Background="Beige" Content="{Binding Status}" Width="80" Margin="10,0"></Label>
             <Label x:Name="TimeElapsedLabel" Background="Beige" Foreground="White" Content="" Width="45" Margin="-4,0,4,0"></Label>
             <Button Content="Build" Click="ApplicationAction" Tag="{Binding}" IsEnabled="{Binding CanBuild}" ></Button>

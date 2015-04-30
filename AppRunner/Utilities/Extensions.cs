@@ -27,5 +27,14 @@ namespace AppRunner.Utilities
             foreach (var elt in list)
                 action(elt);
         }
+
+        public static V GetOrDefault<K, V>(this Dictionary<K, V> dictionary, K key) where V : new() 
+        {
+            if (dictionary.ContainsKey(key))
+                return dictionary[key];
+            else
+                return new V();
+
+        }
     }
 }

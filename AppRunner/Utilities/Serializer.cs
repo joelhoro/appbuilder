@@ -6,7 +6,7 @@ using System.Text;
 
 namespace AppRunner.Utilities
 {
-    class Serializer
+    public class Serializer
     {
         public static void Save<T>(string fileName, T obj)
         {
