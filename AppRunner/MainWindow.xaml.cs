@@ -13,12 +13,6 @@ namespace AppRunner
         public MainWindow()
         {
             InitializeComponent();
-            //var path = @"\Users\Joel\Desktop\tests";
-            //dirlist.SetContext(new DirectoryListVM(path));
-            //dirlist.fileGrid.SelectionChanged += (s,e) => logfilecontrol1.SetContext((s as DataGrid).SelectedItem as LogFileVM);
-            
-            var fileName = @"c:\users\joel\documents\visual studio 2013\Projects\DummyExe\DummyExe\bin\Debug\DummyExe.exe";
-
             LoadSettings();
         }
 

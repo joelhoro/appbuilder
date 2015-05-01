@@ -41,7 +41,7 @@ namespace AppRunner.Utilities
 
     public class DummySolution : Executable, ISolution
     {
-        private const string DummyPath = @"C:\Users\Joel\Documents\Visual Studio 2013\Projects\DummyExe\DummyExe\bin\x64\Debug\DummyExe.exe";
+        private const string DummyPath = "DummyExe.exe";
         public string FullPathName { get; set; }
 
         public DummySolution(string root, string solutionName) : base(DummyPath)

@@ -182,7 +182,7 @@ namespace AppRunner.Models
 
             var executableFullPath = WorkSpace + Solution + Executable;
             if(AppEnvironment.Settings.TestMode)
-                executableFullPath = @"C:\Users\Joel\Documents\Visual Studio 2013\Projects\DummyExe\DummyExe\bin\x64\Debug\DummyExe.exe";
+                executableFullPath = @"DummyExe.exe";
 
             ExecutableObj = new Executable(executableFullPath);
             Status = ApplicationStatus.Running;
