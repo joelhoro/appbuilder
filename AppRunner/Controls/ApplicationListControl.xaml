@@ -7,13 +7,22 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <StackPanel Orientation="Horizontal">
+        <StackPanel Orientation="Horizontal" >
             <StackPanel Orientation="Vertical">
                 <ScrollViewer Height="150" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
                     <ListBox ItemsSource="{Binding ApplicationList}" x:Name="ApplicationListBox" MinWidth="300">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <Grid Margin="0,2">
+                                <Grid Margin="0,2" >
+                                <Grid.Style>
+                                    <Style TargetType="Grid">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsActiveApplication}" Value="True">
+                                                <Setter Property="Background" Value="DarkSalmon"></Setter>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Grid.Style>
                                     <StackPanel Orientation="Horizontal">
                                         <Button Content="Delete" Click="ButtonCallBack" Tag="{Binding}" Margin="0,0,10,0"></Button>
                                         <Button Content="View" Click="ButtonCallBack" Tag="{Binding}" Margin="2,0,5,0" ></Button>

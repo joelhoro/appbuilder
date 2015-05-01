@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO.IsolatedStorage;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
@@ -31,22 +32,42 @@ namespace AppRunner.Utilities
         }
     }
 
-    public class Solution
+    public interface ISolution : IExecutable
     {
-        public string FullPathName;
-        public Solution(string fullPathName)
-        {
-            FullPathName = fullPathName;
-        }
+        void BuildAsync(string outputPath);
+        string FullPathName { get; }
 
-        public Solution(string root, string solutionName)
+    }
+
+    public class DummySolution : Executable, ISolution
+    {
+        private const string DummyPath = @"C:\Users\Joel\Documents\Visual Studio 2013\Projects\DummyExe\DummyExe\bin\x64\Debug\DummyExe.exe";
+        public string FullPathName { get; set; }
+
+        public DummySolution(string root, string solutionName) : base(DummyPath)
         {
             FullPathName = String.Format(@"{0}\src\{1}\{1}.sln", root, solutionName);
         }
 
-        public event DataReceivedEventHandler OutputDataReceived = (s, e) => { };
+        public void BuildAsync(string outputPath) 
+        {
+            var args = "5 Testing";
+            RunAsync(args);
+        }
+    }
 
-        public StringBuilder BuildOutput;
+    public class Solution : Executable, ISolution
+    {
+        public string FullPathName { get; set; }
+        public Solution(string fullPathName) : base(AppEnvironment.Settings.MsBuildPath)
+        {
+            FullPathName = fullPathName;
+        }
+
+        public Solution(string root, string solutionName) : base(AppEnvironment.Settings.MsBuildPath)
+        {
+            FullPathName = String.Format(@"{0}\src\{1}\{1}.sln", root, solutionName);
+        }
 
         /// <summary>
         /// Build solution synchroniously
@@ -55,24 +76,11 @@ namespace AppRunner.Utilities
         /// <param name="executableName"></param>
         /// <param name="verbose"></param>
         /// <returns></returns>
-        public BuildResults Build(string outputPath, bool verbose = false, DataReceivedEventHandler handler = null)
+        public void BuildAsync(string outputPath)
         {
-            BuildOutput = new StringBuilder();
+            InitializeOutputBuilder();
             var args = String.Format(@"/property:OutputPath=""{0}"" ""{1}""", outputPath, FullPathName);
-            DataReceivedEventHandler addToOutput = (s, e) => BuildOutput.AppendLine(e.Data);
-            if (verbose)
-                addToOutput += (sender, eventArgs) => Console.WriteLine(eventArgs.Data);
-            if (handler != null)
-                addToOutput += handler;
-
-            // Launch build asynchronuously but wait for completion
-            var running = true;
-            Executable.ExecutionCompletedHandler completionHandler =  (s, e) => { running = false; };
-            var executable = Shell.RunCommandAsync(AppEnvironment.Settings.MsBuildPath, args, eventhandler: addToOutput, completedHandler: completionHandler);
-            while (running)
-                Thread.Sleep(250);
-
-            return BuildResults.FromOutput(BuildOutput.ToString());
+            RunAsync(args);
         }
 
     }

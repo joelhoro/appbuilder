@@ -31,52 +31,62 @@ namespace AppRunner.Controls
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            (DataContext as ApplicationModel).Run();
+            (DataContext as ApplicationVM).Run();
         }
 
+        
         internal void ScrollToEnd()
         {
-            TextBox1.ScrollToEnd();
+            MainTextBox.ScrollToEnd();
         }
 
-        DispatcherTimer _dispatcherTimer;
+        private DispatcherTimer _dispatcherTimer;
 
-        internal void SetContext(LogFileModel logFileModel)
+        private Dictionary<ApplicationStatus, Tuple<Brush, Brush>>  ColorDictionary = new Dictionary
+            <ApplicationStatus, Tuple<Brush, Brush>>()
         {
-            DataContext = logFileModel;
-            //LogFileModel.PropertyChanged += (s, e) =>
-            //{
-            //    if (e.PropertyName == "FileContent")
-            //        TextBox1.ScrollToEnd();
-            //};
+            { ApplicationStatus.BuildFailed,     Tuple.Create<Brush,Brush>(Brushes.Coral, Brushes.White) },
+            { ApplicationStatus.Running,         Tuple.Create<Brush,Brush>(Brushes.CornflowerBlue, Brushes.White) },
+            { ApplicationStatus.BuildCompleted,  Tuple.Create<Brush,Brush>(Brushes.GreenYellow, Brushes.DarkBlue) },
+            { ApplicationStatus.Building,        Tuple.Create<Brush,Brush>(Brushes.DarkGray,Brushes.Black) }
+        };
 
-        }
-
-        public void SetContext(ApplicationModel application)
+    public void SetContext(ApplicationListVM applicationList)
         {
-            DataContext = application;
+            DataContext = applicationList;
             if (_dispatcherTimer != null) _dispatcherTimer.Stop();
 
+            // this is a very inefficient way to poll for changes, we should
+            // bind to the OutputDataReceived directly...
             _dispatcherTimer = new DispatcherTimer();
             _dispatcherTimer.Tick += new EventHandler((s, e) =>
             {
-                TextBox1.Background = Brushes.Black;
-                TextBox1.Foreground = Brushes.White;
-                TextBox1.Text = application.BuildOutput;
-                TextBox1.ScrollToEnd();
+                var colors = Tuple.Create<Brush,Brush>(Brushes.CornflowerBlue,Brushes.White);
+                if (applicationList.ActiveApplication != null)
+                {
+                    var app = applicationList.ActiveApplication;
+                    if (ColorDictionary.ContainsKey(app.Status))
+                        colors = ColorDictionary[app.Status];
+
+                    MainTextBox.Text = applicationList.ActiveApplication.Output;
+                    MainTextBox.ScrollToEnd();
+
+                    MainTextBox.Background = colors.Item1;
+                    MainTextBox.Foreground = colors.Item2;
+                }
             });
             _dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 250);
             _dispatcherTimer.Start();
 
-            application.Test.ExecutionCompleted += (s,e) =>
-                Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    TextBox1.Background = Brushes.Beige;
-                    TextBox1.Foreground = Brushes.Black;
-                    if(_dispatcherTimer != null)
-                        _dispatcherTimer.Stop();
-                    _dispatcherTimer = null;
-                }));
+            //application.SolutionObj.ExecutionCompleted += (s,e) =>
+            //    Dispatcher.BeginInvoke(new Action(() =>
+            //    {
+            //        MainTextBox.Background = Brushes.Beige;
+            //        MainTextBox.Foreground = Brushes.Black;
+            //        if(_dispatcherTimer != null)
+            //            _dispatcherTimer.Stop();
+            //        _dispatcherTimer = null;
+            //    }));
         }
     }
 }

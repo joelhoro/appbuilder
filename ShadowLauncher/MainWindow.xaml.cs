@@ -36,7 +36,7 @@ namespace ShadowLauncher
             var shadowCopier = DataContext as ShadowCopierModel;
             shadowCopier.BuildAndrun();
             shadowCopier.build.OutputDataReceived += (o, args) => Dispatcher.BeginInvoke(new Action(
-                    () => LogFileControl.Text = shadowCopier.build.BuildOutput.ToString()
+                    () => LogFileControl.Text = shadowCopier.build.Output
                 ) );
 
         }

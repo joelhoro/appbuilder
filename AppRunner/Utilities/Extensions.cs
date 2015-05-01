@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AppRunner.Utilities
 {
@@ -14,6 +15,16 @@ namespace AppRunner.Utilities
         public static string With(this string mask, params object[] args)
         {
             return String.Format(mask, args);
+        }
+
+        public static bool IsEmpty<T>(this IEnumerable<T> list)
+        {
+            return list.Count() == 0;
+        }
+
+        public static bool IsNotEmpty<T>(this IEnumerable<T> list)
+        {
+            return !IsEmpty(list);
         }
 
         /// <summary>

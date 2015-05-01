@@ -35,35 +35,46 @@ namespace AppRunner.Controls
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            (DataContext as ApplicationModel).Run();
+            (DataContext as ApplicationVM).Run();
         }
 
         private void ApplicationAction(object sender, RoutedEventArgs evt)
         {
             var action = (sender as Button).Content.ToString();
+            var app = (sender as Button).Tag as ApplicationVM;
             if (action == "Build")
             {
-                var appToBuild = (sender as Button).Tag as ApplicationModel;
-                appToBuild.Build();
-                var startTime = DateTime.Now;
-                DataReceivedEventHandler outputChangedDelegate = (s, e) => Dispatcher.BeginInvoke(
-                    new Action(() =>
-                    {
-                        var minutes = (DateTime.Now - startTime).Minutes;
-                        var seconds = (DateTime.Now - startTime).Seconds;
-                        TimeElapsedLabel.Background = Brushes.CadetBlue;
-                        TimeElapsedLabel.Content = "{0}:{1:d2}".With(minutes,seconds);
-                    })
-                    );
-
-                appToBuild.Test.AddOutputHandler(outputChangedDelegate);
-                appToBuild.Test.ExecutionCompleted += (s,e) => Dispatcher.BeginInvoke(new Action(() =>
-                    {
-                        TimeElapsedLabel.Background = Brushes.CornflowerBlue;
-                    } ) );
-
+                app.Build();
+                StartTimer(app,app.SolutionObj as Executable);
+            }
+            else if (action == "Aborted")
+            {
+                app.SolutionObj.Destroy();
+                app.Status = ApplicationStatus.Aborted;
+            }
+            else if (action == "Run")
+            {
+                app.Run();
+                StartTimer(app,app.ExecutableObj);
             }
         }
 
+        private void StartTimer(ApplicationVM app, Executable executable)
+        {
+            var startTime = DateTime.Now;
+            DataReceivedEventHandler outputChangedDelegate = (s, e) => Dispatcher.BeginInvoke(
+                new Action(() =>
+                {
+                    var minutes = (DateTime.Now - startTime).Minutes;
+                    var seconds = (DateTime.Now - startTime).Seconds;
+                    TimeElapsedLabel.Background = Brushes.CadetBlue;
+                    TimeElapsedLabel.Content = "{0}:{1:d2}".With(minutes, seconds);
+                })
+                );
+
+            executable.AddOutputHandler(outputChangedDelegate);
+            executable.ExecutionCompleted +=
+                (s, e) => Dispatcher.BeginInvoke(new Action(() => { TimeElapsedLabel.Background = Brushes.CornflowerBlue; }));
+        }
     }
 }

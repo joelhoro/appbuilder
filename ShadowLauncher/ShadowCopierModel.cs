@@ -88,7 +88,7 @@ namespace ShadowLauncher
             AddToHistory();
             string fullPathName = @"C:\Users\Joel\Documents\Visual Studio 2013\Projects\DummyExe\DummyExe\bin\x64\Debug\DummyExe.exe";
             build = new Solution(fullPathName);
-            build.Build(OutputDirectory);
+            //build.Build(OutputDirectory);
         }
 
         private void AddToHistory()

@@ -28,11 +28,11 @@ namespace AppRunner.Controls
             InitializeComponent();
         }
 
-        public ApplicationListModel AppListModel
+        public ApplicationListVM AppListVm
         {
             get
             {
-                return DataContext as ApplicationListModel;
+                return DataContext as ApplicationListVM;
             }
         }
 
@@ -41,26 +41,22 @@ namespace AppRunner.Controls
             var action = (sender as Button).Content.ToString();
             if (action == "Delete")
             {
-                var app = (sender as Button).Tag as ApplicationModel;
-                AppListModel.Remove(app);
+                var app = (sender as Button).Tag as ApplicationVM;
+                AppListVm.Remove(app);
             }
             else if (action == "Add Application")
             {
-                AppListModel.Add(new ApplicationModel());
+                AppListVm.Add(new ApplicationVM());
             }
             else if (action == "View")
             {
-                var app = (sender as Button).Tag as ApplicationModel;
-                SetActiveApplication(app);
+                var app = (sender as Button).Tag as ApplicationVM;
+                app.SetActiveApplication(AppListVm);
             }
         }
 
-        private void SetActiveApplication(ApplicationModel app)
-        {
-            AppListModel.SetActiveApplication(app);
-        }
 
-        public event ApplicationListModel.ActiveApplicationChangeEventHandler ActiveApplicationChangeEvent;
+        public event ApplicationListVM.ActiveApplicationChangeEventHandler ActiveApplicationChangeEvent;
     }
 
 }

@@ -69,19 +69,22 @@
     <Compile Include="Controls\UserControlNotifying.xaml.cs">
       <DependentUpon>UserControlNotifying.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Models\ApplicationListModel.cs" />
-    <Compile Include="Models\ApplicationModel.cs" />
-    <Compile Include="Models\DirectoryListModel.cs" />
-    <Compile Include="Models\LogFileModel.cs" />
+    <Compile Include="Models\ApplicationListVM.cs" />
+    <Compile Include="Models\ApplicationVM.cs" />
+    <Compile Include="Models\DirectoryListVM.cs" />
+    <Compile Include="Models\LogFileVM.cs" />
     <Compile Include="Models\PropertyNotify.cs" />
     <Compile Include="Utilities\Environment.cs" />
     <Compile Include="Utilities\Executable.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Utilities\Extensions.cs" />
+    <Compile Include="Utilities\FileSystem.cs" />
     <Compile Include="Utilities\Serializer.cs" />
     <Compile Include="Utilities\Shell.cs" />
-    <Compile Include="Utilities\Solution.cs" />
+    <Compile Include="Utilities\Solution.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Utilities\UserSettings.cs" />
     <Page Include="Controls\ApplicationListControl.xaml">
       <SubType>Designer</SubType>

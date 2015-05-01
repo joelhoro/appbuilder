@@ -16,15 +16,15 @@ namespace ConsoleApp
         {
             var solutionName = @"c:\Users\Joel\Documents\Visual Studio 2013\Projects\DummyExe\DummyExe.sln";
             var solution = new Solution(solutionName);
-            Console.WriteLine(solution.Build(@"C:\temp\dummy", verbose: true));
+            //Console.WriteLine(solution.Build(@"C:\temp\dummy", verbose: true));
         }
 
         static void TestSettings()
         {
             var fileName = @"C:\temp\settings.json";
             var settings = new UserSettings();
-            //settings.Applications = new List<ApplicationModel>() {
-            //    new ApplicationModel { WorkArea = @"C:\dev\p4v", Executable = "vNextApp", CommandLineArgs = "MigrateStrategy strategy=28787"  }
+            //settings.Applications = new List<ApplicationVM>() {
+            //    new ApplicationVM { WorkArea = @"C:\dev\p4v", Executable = "vNextApp", CommandLineArgs = "MigrateStrategy strategy=28787"  }
             //};
             //settings.Workspaces = new List<string>() { @"C:\dev\p4v", @"E:\dev\p4v" };
 
@@ -36,7 +36,7 @@ namespace ConsoleApp
 
         static void Main(string[] args)
         {
-            //TestSettings();
+            //TestMode();
             TestBuild();
             Console.WriteLine("Done");
             Console.ReadKey();
@@ -52,7 +52,7 @@ namespace ConsoleApp
             //    Console.WriteLine("Waiting for input");
             //    var k = Console.ReadKey();
             //    if (k.KeyChar == 'x')
-            //        executable.Abort();
+            //        executable.Aborted();
             //}
 
         }

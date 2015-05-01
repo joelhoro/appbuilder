@@ -30,9 +30,10 @@
             <ComboBox ItemsSource="{Binding CommandLineHistory}" Text="{Binding CommandLineArgs}" Width="345" HorizontalAlignment="Left" IsEditable="True" Margin="0,0,5,-0.4" IsSynchronizedWithCurrentItem="False" FontWeight="Bold"/>
             <Label Background="Beige" Content="{Binding Status}" Width="80" Margin="10,0"></Label>
             <Label x:Name="TimeElapsedLabel" Background="Beige" Foreground="White" Content="" Width="45" Margin="-4,0,4,0"></Label>
+            <Button Content="Aborted" Click="ApplicationAction" Tag="{Binding}" IsEnabled="{Binding CanAbort}" ></Button>
             <Button Content="Build" Click="ApplicationAction" Tag="{Binding}" IsEnabled="{Binding CanBuild}" ></Button>
             <Button Content="Run" Click="ApplicationAction" Tag="{Binding}" IsEnabled="{Binding CanRun}" ></Button>
-            <Button Content="Build &amp; Run" Click="ApplicationAction" Tag="{Binding}" IsEnabled="{Binding CanBuildRun}"></Button>
+            <Button Content="Build &amp; Run" Click="ApplicationAction" Tag="{Binding}" IsEnabled="{Binding CanBuild}"></Button>
         </StackPanel>
     </Grid>
 </UserControl>

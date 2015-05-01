@@ -4,11 +4,11 @@ using System.Linq;
 
 namespace AppRunner.Models
 {
-    public class LogFileModel : PropertyNotify
+    public class LogFileVM : PropertyNotify
     {
         public object Parent;
 
-        public LogFileModel(string fullFileName)
+        public LogFileVM(string fullFileName)
         {
             FullFileName = fullFileName;
 //            StartTimer();

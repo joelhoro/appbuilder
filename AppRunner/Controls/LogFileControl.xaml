@@ -7,8 +7,11 @@
              Width="400">
     <Grid Margin="0,0,-236,0" >
         <StackPanel Orientation="Vertical" >
-            <Label Content="{Binding FullFileName}" FontWeight="Bold" FontSize="14" />
-            <TextBox Name="TextBox1" Text="{Binding FileContent}" TextWrapping="Wrap" AcceptsReturn="True"  ScrollViewer.VerticalScrollBarVisibility="Visible" Margin="7,0,10.2,0" Height="433" FontFamily="Consolas" />
+            <StackPanel Orientation="Horizontal">
+                <Label Content="{Binding ActiveApplication.Description}" FontWeight="Bold" FontSize="14" />
+                <Label Content="{Binding ActiveApplication.Status}"></Label>
+            </StackPanel>
+            <TextBox Name="MainTextBox" TextWrapping="Wrap" AcceptsReturn="True"  ScrollViewer.VerticalScrollBarVisibility="Visible" Margin="7,0,10.2,0" Height="433" FontFamily="Consolas" />
         </StackPanel>
     </Grid>
 </UserControl>

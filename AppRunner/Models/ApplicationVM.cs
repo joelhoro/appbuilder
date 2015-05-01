@@ -7,12 +7,25 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Windows;
+using System.Windows.Controls.Primitives;
+using AppRunner.Properties;
 using AppRunner.Utilities;
 
 namespace AppRunner.Models
 {
+    #region Application status
+    public enum ApplicationStatus
+    {
+        Idle,
+        Building,
+        BuildFailed,
+        BuildCompleted,
+        Running,
+        Completed,
+        Aborted
+    };
     [DataContract]
-    public class ApplicationModel : PropertyNotify
+    public class ApplicationVM : PropertyNotify
     {
         #region Choices
 
@@ -55,7 +68,7 @@ namespace AppRunner.Models
             }
         }
         #endregion
-        public ApplicationModel()
+        public ApplicationVM()
         {
             WorkSpace = WorkSpaceChoices.First();
             Executable = ExecutableChoices.First();
@@ -76,64 +89,46 @@ namespace AppRunner.Models
         public string CommandLineArgs { get { return _commandLineArgs; } set { _commandLineArgs = value; NotifyPropertyChanged(); } }
         //public Solution Solution;
 
-        public void Run()
-        {
-            MessageBox.Show(String.Format("Running {0} with {1}", Executable, CommandLineArgs));
-            // run executable somehow
-        }
 
-        private StringBuilder _buildOutput = new StringBuilder();
-        public string BuildOutput { get { return _buildOutput.ToString(); } }
-
-
-        public void Initialize(ApplicationListModel parent, int idx)
+        public void Initialize(ApplicationListVM parent, int idx)
         {
             _parent = parent;
             _parentIdx = idx;
 
-            if(CommandLineHistory == null) CommandLineHistory = new ObservableCollection<string>();
-            _buildOutput = new StringBuilder();
-            Test = null;
+            if(CommandLineHistory == null)
+                CommandLineHistory = new ObservableCollection<string>();
             Status = ApplicationStatus.Idle;
         }
 
-        public Executable Test; // clearly this is just for testing...
         private ApplicationStatus _status;
-        private ApplicationListModel _parent;
+        private ApplicationListVM _parent;
         private int _parentIdx;
 
-        #region Application status
-        public enum ApplicationStatus
-        {
-            Idle,
-            Building,
-            BuildFailed,
-            BuildSucceeded,
-            Running,
-            Completed
-        };
+        public bool IsActiveApplication { get { return _parent.ActiveApplication == this; } }
 
         public ApplicationStatus Status
         {
             get { return _status; }
-            private set
+            internal set
             {
                 _status = value;
                 NotifyPropertyChanged();
                 NotifyPropertyChanged("CanBuild");
                 NotifyPropertyChanged("CanRun");
                 NotifyPropertyChanged("CanBuildRun");
+                NotifyPropertyChanged("CanAbort");
+                NotifyPropertyChanged("Description");
             }
         }
 
         private ApplicationStatus[] CanBuildStages
         {
-            get { return new[] { ApplicationStatus.Idle, ApplicationStatus.BuildFailed, ApplicationStatus.Completed }; }  
+            get { return new[] { ApplicationStatus.Idle, ApplicationStatus.BuildFailed, ApplicationStatus.Completed, ApplicationStatus.BuildCompleted, ApplicationStatus.Aborted }; }  
         }
 
         private ApplicationStatus[] CanRunStages
         {
-            get { return new[] { ApplicationStatus.BuildSucceeded, ApplicationStatus.Completed }; }
+            get { return new[] { ApplicationStatus.BuildCompleted, ApplicationStatus.Completed }; }
         }
        
         public bool CanBuild
@@ -144,6 +139,10 @@ namespace AppRunner.Models
         {
             get { return CanRunStages.Contains(Status); }
         }
+        public bool CanAbort
+        {
+            get { return Status != ApplicationStatus.Idle; }
+        }
 
         public bool CanBuildRun
         {
@@ -152,45 +151,77 @@ namespace AppRunner.Models
 
         #endregion
 
+        public ISolution SolutionObj;
+
         public void Build()
         {
-            if (CommandLineHistory[0] != CommandLineArgs)
-                CommandLineHistory = new ObservableCollection<string>(new[] {CommandLineArgs}.Union(CommandLineHistory));
-            //Solution = new Solution(WorkSpace, Executable);
-            //var outputPath = @"C:\temp\build1";
-            //Solution.Build(outputPath, Executable);
-            var file = @"C:\Users\Joel\Documents\Visual Studio 2013\Projects\DummyExe\DummyExe\bin\x64\Debug\DummyExe.exe";
-            DataReceivedEventHandler appendLine = (s, e) => { _buildOutput.AppendLine(e.Data); };
-            if (Test != null)
-            {
-                Test.Destroy();
-            }
-            Test = new Executable(file);
-            
-            _parent.SetActiveApplication(this);
+            if(AppEnvironment.Settings.TestMode)
+                SolutionObj = new DummySolution(WorkSpace,Solution);
+            else
+                SolutionObj = new Solution(WorkSpace, Solution);
+
+            var path = AppEnvironment.Settings.Path;
+            var mask = AppEnvironment.Settings.BuildDir;
+            var outputPath = FileSystem.GetFirstDirName(path, mask,createDirectory: true);
+
+            SolutionObj.BuildAsync(outputPath);
+            SetActiveApplication(_parent);
+
             Status = ApplicationStatus.Building;
-            Test.AddOutputHandler(appendLine);
-            Test.ExecutionCompleted += (s, e) => { 
-                Status = ApplicationStatus.Completed;
-                Test.Destroy();
+            SolutionObj.ExecutionCompleted += (s, e) => { 
+                Status = ApplicationStatus.BuildCompleted;
             };
+        }
 
-            var path = @"C:\temp\apprunner\build-{0:d3}".With(_parentIdx);
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
-            var counter = 0;
-            while (Directory.Exists(@"{0}\{1:d3}".With(path, counter)))
-                counter++;
-            string finalPath = @"{0}\{1:d3}".With(path, counter);
+        public Executable ExecutableObj;
 
-            Directory.CreateDirectory(finalPath);
-            var args = "3 \"{0} - {1}\"".With(finalPath,Executable);
-            Test.RunAsync(args);
+        public void Run()
+        {
+            if (CommandLineHistory.IsEmpty() || (CommandLineHistory[0] != CommandLineArgs))
+                CommandLineHistory = new ObservableCollection<string>(new[] { CommandLineArgs }.Union(CommandLineHistory));
+
+            var executableFullPath = WorkSpace + Solution + Executable;
+            if(AppEnvironment.Settings.TestMode)
+                executableFullPath = @"C:\Users\Joel\Documents\Visual Studio 2013\Projects\DummyExe\DummyExe\bin\x64\Debug\DummyExe.exe";
+
+            ExecutableObj = new Executable(executableFullPath);
+            Status = ApplicationStatus.Running;
+            ExecutableObj.RunAsync("15 Test running");
+            ExecutableObj.ExecutionCompleted += (s, e) =>
+            {
+                Status = ApplicationStatus.BuildCompleted;
+            };
+        }
+
+        public string Description { get { return ToString(); } }
+
+        public string Output
+        {
+            get
+            {
+                if (Status == ApplicationStatus.Running || Status == ApplicationStatus.Completed) return ExecutableObj.Output;
+                if (SolutionObj != null)
+                    return SolutionObj.Output;
+                else
+                    return "<idle>";
+            }
         }
 
         public override string ToString()
         {
-            return "[{0}] {1} {2}".With(WorkSpace, Executable, CommandLineArgs);
+            if(Status == ApplicationStatus.Building)
+                return "Building {0}".With(SolutionObj);
+            else if (Status == ApplicationStatus.BuildCompleted)
+                return "Build failed!";
+            else
+                return "[{0}] {1} {2}".With(WorkSpace, Executable, CommandLineArgs);
+        }
+
+        internal void SetActiveApplication(ApplicationListVM AppListVm)
+        {
+            AppListVm.ActiveApplication = this;
+            AppListVm.ApplicationList
+                .ForEach(a => a.NotifyPropertyChanged("IsActiveApplication"));
         }
     }
 }

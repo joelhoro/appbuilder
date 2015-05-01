@@ -1,13 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 
 namespace AppRunner.Utilities
-{    
-    public class Executable : Process
+{
+    public delegate void ExecutionCompletedHandler(object sender, EventArgs args);
+    public interface IExecutable
+    {
+        event DataReceivedEventHandler OutputDataReceived;
+        event ExecutionCompletedHandler ExecutionCompleted;
+        void AddOutputHandler(DataReceivedEventHandler handler);
+        void RemoveOutputHandlers();
+        string Output { get; }
+        void Destroy();
+    }
+
+    public class Executable : Process, IExecutable
     {
         #region Constructor
         public Executable(string fileName) : base()
@@ -20,10 +32,20 @@ namespace AppRunner.Utilities
                     RedirectStandardOutput = true
                 };
         }
+
+        public StringBuilder OutputBuilder = new StringBuilder();
+
+        public string Output { get { return OutputBuilder.ToString(); } }
+
+        public void InitializeOutputBuilder()
+        {
+            OutputBuilder = new StringBuilder();
+            AddOutputHandler((sender, args) => OutputBuilder.AppendLine(args.Data));
+        }
+
         #endregion
 
         #region Events and Handling of eventhandlers
-        public delegate void ExecutionCompletedHandler(object sender, EventArgs args);
 
         public event ExecutionCompletedHandler ExecutionCompleted = delegate { };
 
@@ -42,6 +64,7 @@ namespace AppRunner.Utilities
             _outputHandlers.Clear();
         }
         #endregion
+
 
         public string FileName { get { return StartInfo.FileName; } }
         public int PID { get { return Id; } }
@@ -81,6 +104,7 @@ namespace AppRunner.Utilities
         /// <param name="eventHandler"></param>
         public void RunAsync(string commandLineArgs = "", DataReceivedEventHandler eventHandler = null)
         {
+            InitializeOutputBuilder();
             Run(commandLineArgs, async:true, eventHandler:eventHandler);
         }
 
@@ -116,7 +140,6 @@ namespace AppRunner.Utilities
             {
                 // ignored
             }
-            //ExecutionCompleted(this, new EventArgs());
         }
     }
 }
