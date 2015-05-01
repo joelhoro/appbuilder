@@ -68,10 +68,12 @@ namespace AppRunner.Models
             }
         }
         #endregion
-        public ApplicationVM()
+        public ApplicationVM(bool empty = false)
         {
-            WorkSpace = WorkSpaceChoices.First();
-            Executable = ExecutableChoices.First();
+            if (empty)
+                return;
+            WorkSpace = WorkSpaceChoices.FirstOrDefault();
+            Executable = ExecutableChoices.FirstOrDefault();
             CommandLineArgs = "<command line args>";
         }
 
