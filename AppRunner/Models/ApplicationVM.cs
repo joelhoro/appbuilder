@@ -57,7 +57,6 @@ namespace AppRunner.Models
             if (empty)
                 return;
             WorkSpace = WorkSpaceChoices.FirstOrDefault();
-            Executable = ExecutableChoices.FirstOrDefault();
             CommandLineArgs = "<command line args>";
         }
 
