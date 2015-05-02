@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using AppRunner.Properties;
@@ -29,36 +30,10 @@ namespace AppRunner.Models
     {
         #region Choices
 
-        [DataMember]
-        private ObservableCollection<string> _commandLineHistory;
-
-        public ObservableCollection<string> CommandLineHistory
-        {
-            get { return _commandLineHistory; }
-            set { _commandLineHistory = value; NotifyPropertyChanged(); }
-        } 
         public ObservableCollection<string> SolutionChoices
         {
-            get
-            {
-                return new ObservableCollection<string>() { "MiniApp", "Hindsight" };
-            }
+            get { return new ObservableCollection<string>(FileSystem.FileList(WorkSpace)); }
         }
-
-        public ObservableCollection<string> ExecutableChoices
-        {
-            get
-            {
-                var combinations = new Dictionary<string, ObservableCollection<string>>
-                {
-                    {"MiniApp", new ObservableCollection<string>() {"MiniApp.exe"}},
-                    {"Hindsight", new ObservableCollection<string>() {"HS.exe"}}
-                };
-                if (Solution != null && combinations.ContainsKey(Solution))
-                    return combinations[Solution];
-                else
-                    return new ObservableCollection<string>();
-            } }
 
         public ObservableCollection<string> WorkSpaceChoices
         {
@@ -67,11 +42,20 @@ namespace AppRunner.Models
                 return AppEnvironment.Settings.Workspaces;
             }
         }
+
+        public ObservableCollection<string> CommandLineHistory
+        {
+            get
+            {
+                return new ObservableCollection<string>(AppEnvironment.Settings.CommandLineHistory.GetOrDefault(Executable));
+            }
+        }
+
         #endregion
         public ApplicationVM()
         {
             WorkSpace = WorkSpaceChoices.First();
-            Executable = ExecutableChoices.First();
+            //Executable = ExecutableChoices.First();
             CommandLineArgs = "<command line args>";
         }
 
@@ -83,9 +67,9 @@ namespace AppRunner.Models
         private string _executable;
         [DataMember]
         private string _commandLineArgs;
-        public string WorkSpace { get { return _workSpace; } set { _workSpace = value; NotifyPropertyChanged(); } }
+        public string WorkSpace { get { return _workSpace; } set { _workSpace = value; NotifyPropertyChanged(); NotifyPropertyChanged("SolutionChoices");} }
         public string Executable { get { return _executable; } set { _executable = value; NotifyPropertyChanged(); } }
-        public string Solution { get { return _solution; } set { _solution = value; NotifyPropertyChanged(); NotifyPropertyChanged("ExecutableChoices"); Executable = ExecutableChoices[0]; } }
+        public string Solution { get { return _solution; } set { _solution = value; NotifyPropertyChanged(); } }
         public string CommandLineArgs { get { return _commandLineArgs; } set { _commandLineArgs = value; NotifyPropertyChanged(); } }
         //public Solution Solution;
 
@@ -95,8 +79,6 @@ namespace AppRunner.Models
             _parent = parent;
             _parentIdx = idx;
 
-            if(CommandLineHistory == null)
-                CommandLineHistory = new ObservableCollection<string>();
             Status = ApplicationStatus.Idle;
         }
 
@@ -177,21 +159,23 @@ namespace AppRunner.Models
 
         public void Run()
         {
-            if (CommandLineHistory.IsEmpty() || (CommandLineHistory[0] != CommandLineArgs))
-                CommandLineHistory = new ObservableCollection<string>(new[] { CommandLineArgs }.Union(CommandLineHistory));
+            AppEnvironment.Settings.AddToHistory(Executable, CommandLineArgs);
+            NotifyPropertyChanged("CommandLineHistory");
 
             var executableFullPath = WorkSpace + Solution + Executable;
             if(AppEnvironment.Settings.TestMode)
                 executableFullPath = @"DummyExe.exe";
 
+            var commandLineExpanded = Extensions.ExpandCommandLine(CommandLineArgs);
             ExecutableObj = new Executable(executableFullPath);
             Status = ApplicationStatus.Running;
-            ExecutableObj.RunAsync("15 Test running");
+            ExecutableObj.RunAsync("15 Test running with " + commandLineExpanded);
             ExecutableObj.ExecutionCompleted += (s, e) =>
             {
                 Status = ApplicationStatus.BuildCompleted;
             };
         }
+
 
         public string Description { get { return ToString(); } }
 

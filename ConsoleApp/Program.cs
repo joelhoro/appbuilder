@@ -1,4 +1,6 @@
-﻿using AppRunner.Models;
+﻿using System.IO;
+using System.Linq;
+using AppRunner.Models;
 using AppRunner.Utilities;
 using System;
 using System.Collections.Generic;
@@ -36,24 +38,17 @@ namespace TestConsole
 
         static void Main(string[] args)
         {
+            FileSystem.Initialize(AppEnvironment.Settings.Workspaces, true);
+            var path = @"c:\Users\Joel\Documents\Visual Studio 2013\Projects";
+            var x = FileSystem.FileList(path)
+                .Select(f => f.Replace(path+@"\", ""));
+
             //TestMode();
-            TestBuild();
+            //TestBuild();
             Console.WriteLine("Done");
             Console.ReadKey();
 
-            //var fileName = @"c:\users\joel\documents\visual studio 2013\Projects\DummyExe\DummyExe\bin\Debug\DummyExe.exe";
-            //var executable = new Executable(fileName);
-            //executable.OutputDataReceived += (s, e) => Console.WriteLine(e.Data);
-            //executable.Run();
-            //executable.Run();
 
-            //while (true)
-            //{
-            //    Console.WriteLine("Waiting for input");
-            //    var k = Console.ReadKey();
-            //    if (k.KeyChar == 'x')
-            //        executable.Aborted();
-            //}
 
         }
 

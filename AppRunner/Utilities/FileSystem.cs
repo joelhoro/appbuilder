@@ -13,25 +13,22 @@ namespace AppRunner.Utilities
         private static Dictionary<string,List<string>> _solutionscache = new Dictionary<string, List<string>>();
 
         private static string fileCache = @"C:\temp\filecache";
-        public static void Initialize(bool refreshCache = false)
+        public static Dictionary<string,int> Initialize(IEnumerable<string> directories, bool refreshCache = false)
         {
-            if (refreshCache)
+            if (refreshCache || !File.Exists(fileCache))
             {
-                var root = @"c:\Users\Joel\Documents\Visual Studio 2013\Projects";
-                var files = Directory.GetFiles(root, "*.sln", SearchOption.AllDirectories).ToList();
+//                var root = @"c:\Users\Joel\Documents\Visual Studio 2013\Projects";
                 _solutionscache = new Dictionary<string, List<string>>();
-                _solutionscache[root] = files;
+                foreach (var dir in directories)
+                {
+                    var files = Directory.GetFiles(dir, "*.sln", SearchOption.AllDirectories).ToList();
+                    _solutionscache[dir] = files.Select(f => f.Replace(dir, "")).ToList();
+                }
                 Serializer.Save(fileCache,_solutionscache);
             }
             else
-            {
-                if (!File.Exists(fileCache))
-                {
-                    _solutionscache = new Dictionary<string, List<string>>();
-                    Serializer.Save(fileCache,_solutionscache);                    
-                }
                 _solutionscache = Serializer.Load<Dictionary<string, List<string>>>(fileCache);
-            }
+            return _solutionscache.ToDictionary(elt => elt.Key, elt => elt.Value.Count);
         }
 
         public static List<string> FileList(string path)

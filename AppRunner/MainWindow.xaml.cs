@@ -1,4 +1,5 @@
-﻿using AppRunner.Controls;
+﻿using System.Linq;
+using AppRunner.Controls;
 using AppRunner.Models;
 using AppRunner.Utilities;
 using System;
@@ -45,6 +46,12 @@ namespace AppRunner
                             })
                         );
                     
+                    break;
+                case "RefreshFileList":
+                    var results = FileSystem.Initialize(AppEnvironment.Settings.Workspaces, refreshCache:true);
+                    var message = results.Select(r => r.Key + ": " + r.Value + " solutions").Join("\n");
+                    var title = "Found {0} files in {1} directories".With( results.Sum(r => r.Value),results.Count());
+                    MessageBox.Show(message, title);
                     break;
                 default:
                     break;

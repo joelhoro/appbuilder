@@ -9,6 +9,7 @@
         static AppEnvironment()
         {
             LoadSettings();
+            FileSystem.Initialize(Settings.Workspaces);
         }
         public static void LoadSettings()
         {

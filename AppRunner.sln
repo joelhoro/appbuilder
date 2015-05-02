@@ -5,7 +5,7 @@ VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppRunner", "AppRunner\AppRunner.csproj", "{6D4C75C0-50EC-48E2-AAD5-996ED3806F7E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp", "ConsoleApp\ConsoleApp.csproj", "{F07612D6-4825-4083-B825-868B6D46457F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsole", "ConsoleApp\TestConsole.csproj", "{F07612D6-4825-4083-B825-868B6D46457F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShadowLauncher", "ShadowLauncher\ShadowLauncher.csproj", "{7B358014-1479-4861-9DB0-B6CDE61FFFF6}"
 EndProject

@@ -16,8 +16,18 @@ namespace AppRunner.Utilities
 
         public ObservableCollection<string> Workspaces = new ObservableCollection<string>();
         public List<ApplicationVM> Applications = new List<ApplicationVM>();
+        public Dictionary<string,List<string>> CommandLineHistory = new Dictionary<string, List<string>>();
         public string Path = @"C:\temp\apprunner";
         public string BuildDir = "Build_{0:d2}";
+
+        internal void AddToHistory(string Executable, string commandLineArgs)
+        {
+            if(!CommandLineHistory.ContainsKey(Executable))
+                CommandLineHistory[Executable] = new List<string>() {commandLineArgs};
+
+            if(!CommandLineHistory[Executable].Contains(commandLineArgs))
+                CommandLineHistory[Executable].Add(commandLineArgs);
+        }
     }
 
     

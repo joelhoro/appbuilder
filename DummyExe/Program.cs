@@ -3,17 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Process = System.Diagnostics.Process;
 using Thread = System.Threading.Thread;
+using AppRunner.Utilities;
 
 namespace DummyExe
 {
-    public static class Extensions
-    {
-        public static string Join(this IEnumerable<object> list, string glue)
-        {
-            return String.Join(glue,list);
-        }
-    }
-
     class Program
     {
         private static void Main(string[] args)
