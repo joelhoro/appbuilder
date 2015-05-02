@@ -1,4 +1,6 @@
-﻿namespace AppRunner.Utilities
+﻿using System.IO;
+
+namespace AppRunner.Utilities
 {
     public static class AppEnvironment
     {
@@ -13,7 +15,13 @@
         }
         public static void LoadSettings()
         {
-            Settings = Serializer.Load<UserSettings>(SettingsFileName);
+            if (!File.Exists(SettingsFileName))
+            {
+                Settings = new UserSettings();
+                SaveSettings();
+            }
+            else
+                Settings = Serializer.Load<UserSettings>(SettingsFileName);
         }
 
         public static void SaveSettings()

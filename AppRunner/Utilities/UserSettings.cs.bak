@@ -15,8 +15,12 @@ namespace AppRunner.Utilities
         public string MsBuildPath = @"""c:\Program Files (x86)\MSBuild\12.0\Bin\MSBuild.exe""";
 
         public ObservableCollection<string> Workspaces = new ObservableCollection<string>();
-        public List<ApplicationVM> Applications = new List<ApplicationVM>() {new ApplicationVM(empty: true) };
+<<<<<<< HEAD
+        public List<ApplicationVM> Applications = new List<ApplicationVM>();
         public Dictionary<string,List<string>> CommandLineHistory = new Dictionary<string, List<string>>();
+=======
+        public List<ApplicationVM> Applications = new List<ApplicationVM>() {new ApplicationVM(empty: true) };
+>>>>>>> origin/master
         public string Path = @"C:\temp\apprunner";
         public string BuildDir = "Build_{0:d2}";
 
