@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace AppRunner.Utilities
 {
@@ -16,6 +17,12 @@ namespace AppRunner.Utilities
         {
             return String.Format(mask, args);
         }
+
+        public static string Join(this IEnumerable<object> list, string glue)
+        {
+            return String.Join(glue, list);
+        }
+
 
         public static bool IsEmpty<T>(this IEnumerable<T> list)
         {
@@ -47,5 +54,35 @@ namespace AppRunner.Utilities
                 return new V();
 
         }
+
+        public static string ExpandCommandLine(string input)
+        {
+            var replacements = new List<Tuple<string, Func<string, string>>>()
+            {
+                Tuple.Create<string, Func<string, string>>("{d:(.*?)}", arg => DateTime.Today.ToString(arg as string)),
+                Tuple.Create<string, Func<string, string>>(@"{user}", arg => Environment.UserName)
+            };
+
+            var args = input;
+
+            replacements.ForEach(tuple =>
+                {
+                    var regex = new Regex(tuple.Item1);
+                    Match match = regex.Match(args);
+                    while (match.Success)
+                    {
+                        var mask = match.Value;
+                        var arg = match.Groups[1].Value;
+                        match = match.NextMatch();
+                        // replace the item1 with item2 applied to match
+                        args = args.Replace(mask, tuple.Item2(arg));
+                    }
+                });
+
+            return args;
+        }
+
+
+
     }
 }
