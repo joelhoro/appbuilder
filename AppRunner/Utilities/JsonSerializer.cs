@@ -6,17 +6,22 @@ using System.Text;
 
 namespace AppRunner.Utilities
 {
-    public class Serializer
+    public class JsonSerializer
     {
-        public static void Save<T>(string fileName, T obj)
+        public static string ConvertToString<T>(T obj)
         {
             var resultsSerializer = new DataContractJsonSerializer(typeof(T));
             var stream = new MemoryStream();
             resultsSerializer.WriteObject(stream, obj);
-            string resultString = Encoding.Default.GetString(stream.ToArray());
-
+            var result = Encoding.Default.GetString(stream.ToArray());
             stream.Close();
             stream.Dispose();
+            return result;
+        }
+
+        public static void Save<T>(string fileName, T obj)
+        {
+            var resultString = ConvertToString(obj);
 
             var resultsFile = new StreamWriter(fileName);
             var jPrinter = new JsonPrettyPrinter(new JsonPPStrategyContext());

@@ -24,16 +24,16 @@ namespace ShadowLauncher
             if (!File.Exists(SettingsFileName))
             {
                 var settings = new Settings { History = new Dictionary<string, List<string>>() };
-                Serializer.Save(SettingsFileName,settings);
+                JsonSerializer.Save(SettingsFileName,settings);
                 return settings;
             }
             else
-                return Serializer.Load<Settings>(SettingsFileName);
+                return JsonSerializer.Load<Settings>(SettingsFileName);
         }
 
         public void Save()
         {
-            Serializer.Save(SettingsFileName,this);
+            JsonSerializer.Save(SettingsFileName,this);
         }
     }
 
