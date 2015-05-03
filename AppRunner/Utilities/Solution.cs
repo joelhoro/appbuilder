@@ -66,7 +66,7 @@ namespace AppRunner.Utilities
 
         public Solution(string root, string solutionName) : base(AppEnvironment.Settings.MsBuildPath)
         {
-            FullPathName = String.Format(@"{0}\src\{1}\{1}.sln", root, solutionName);
+            FullPathName = String.Format(@"{0}{1}", root, solutionName);
         }
 
         /// <summary>
@@ -79,8 +79,8 @@ namespace AppRunner.Utilities
         public void BuildAsync(string outputPath)
         {
             InitializeOutputBuilder();
-            var args = String.Format(@"/property:OutputPath=""{0}"" ""{1}""", outputPath, FullPathName);
-            RunAsync(args);
+            var args = String.Format(@"""{0}""", FullPathName);
+            RunAsync(FullPathName);
         }
 
     }
