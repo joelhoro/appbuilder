@@ -24,10 +24,10 @@ namespace AppRunner.Utilities
                     var files = Directory.GetFiles(dir, "*.sln", SearchOption.AllDirectories).ToList();
                     _solutionscache[dir] = files.Select(f => f.Replace(dir, "")).ToList();
                 }
-                Serializer.Save(fileCache,_solutionscache);
+                JsonSerializer.Save(fileCache,_solutionscache);
             }
             else
-                _solutionscache = Serializer.Load<Dictionary<string, List<string>>>(fileCache);
+                _solutionscache = JsonSerializer.Load<Dictionary<string, List<string>>>(fileCache);
             return _solutionscache.ToDictionary(elt => elt.Key, elt => elt.Value.Count);
         }
 

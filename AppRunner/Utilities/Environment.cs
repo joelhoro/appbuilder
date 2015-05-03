@@ -21,12 +21,12 @@ namespace AppRunner.Utilities
                 SaveSettings();
             }
             else
-                Settings = Serializer.Load<UserSettings>(SettingsFileName);
+                Settings = JsonSerializer.Load<UserSettings>(SettingsFileName);
         }
 
         public static void SaveSettings()
         {
-            Serializer.Save(SettingsFileName,Settings);
+            JsonSerializer.Save(SettingsFileName,Settings);
         }
     }
 }
