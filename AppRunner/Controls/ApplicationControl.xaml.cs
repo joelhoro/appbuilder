@@ -47,7 +47,7 @@ namespace AppRunner.Controls
                 app.Build();
                 StartTimer(app,app.SolutionObj as Executable);
             }
-            else if (action == "Aborted")
+            else if (action == "Abort")
             {
                 app.SolutionObj.Destroy();
                 app.Status = ApplicationStatus.Aborted;

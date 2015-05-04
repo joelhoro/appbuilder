@@ -18,22 +18,29 @@
     </UserControl.Resources>
 
     <Grid>
-        <StackPanel Orientation="Horizontal"  Grid.ColumnSpan="2">
-            <!--<StackPanel.Resources>
+        <StackPanel Orientation="Vertical"  Grid.ColumnSpan="2">
+            <StackPanel Orientation="Horizontal"  Grid.ColumnSpan="2" Margin="5">
+                <!--<StackPanel.Resources>
                 <BooleanToVisibilityConverter x:Key="boolToVisibilityConverter" />
             </StackPanel.Resources>-->
             <!--<Label Content="Executable" FontSize="14"></Label>-->
 
-            <ComboBox ItemsSource="{Binding WorkSpaceChoices}"  Text="{Binding WorkSpace}" Width="332" HorizontalAlignment="Left" Margin="0,0,10,-0.4" IsSynchronizedWithCurrentItem="False" FontWeight="Bold"/>
-            <ComboBox ItemsSource="{Binding SolutionChoices}" Text="{Binding Solution}" Width="309" HorizontalAlignment="Left" IsEditable="True" Margin="0,0,5,-0.4" IsSynchronizedWithCurrentItem="False" FontWeight="Bold"/>
-            <ComboBox ItemsSource="{Binding ExecutableChoices}" Text="{Binding Executable}" Width="118" HorizontalAlignment="Left" IsEditable="True" Margin="0,0,5,-0.4" IsSynchronizedWithCurrentItem="False" FontWeight="Bold"/>
-            <ComboBox ItemsSource="{Binding CommandLineHistory}" Text="{Binding CommandLineArgs}" Width="345" HorizontalAlignment="Left" IsEditable="True" Margin="0,0,5,-0.4" IsSynchronizedWithCurrentItem="False" FontWeight="Bold"/>
-            <Label Background="Beige" Content="{Binding Status}" Width="80" Margin="10,0"></Label>
-            <Label x:Name="TimeElapsedLabel" Background="Beige" Foreground="White" Content="" Width="45" Margin="-4,0,4,0"></Label>
-            <Button Content="Aborted" Click="ApplicationAction" Tag="{Binding}" IsEnabled="{Binding CanAbort}" ></Button>
-            <Button Content="Build" Click="ApplicationAction" Tag="{Binding}" IsEnabled="{Binding CanBuild}" ></Button>
-            <Button Content="Run" Click="ApplicationAction" Tag="{Binding}" IsEnabled="{Binding CanRun}" ></Button>
-            <Button Content="Build &amp; Run" Click="ApplicationAction" Tag="{Binding}" IsEnabled="{Binding CanBuild}"></Button>
+                <ComboBox ItemsSource="{Binding WorkSpaceChoices}"  Text="{Binding WorkSpace}" Width="332" HorizontalAlignment="Left" Margin="0,0,10,-0.4" IsSynchronizedWithCurrentItem="False" FontWeight="Bold"/>
+                <ComboBox ItemsSource="{Binding SolutionChoices}" Text="{Binding Solution}" Width="309" HorizontalAlignment="Left" IsEditable="True" Margin="0,0,5,-0.4" IsSynchronizedWithCurrentItem="False" FontWeight="Bold"/>
+                <ComboBox ItemsSource="{Binding ExecutableChoices}" Text="{Binding Executable}" Width="118" HorizontalAlignment="Left" IsEditable="True" Margin="0,0,5,-0.4" IsSynchronizedWithCurrentItem="False" FontWeight="Bold"/>
+                <ComboBox ItemsSource="{Binding CommandLineHistory}" Text="{Binding CommandLineArgs}" Width="345" HorizontalAlignment="Left" IsEditable="True" Margin="0,0,5,-0.4" IsSynchronizedWithCurrentItem="False" FontWeight="Bold"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal"  Grid.ColumnSpan="2" Margin="5">
+                <Button Content="Abort" Click="ApplicationAction" Tag="{Binding}" IsEnabled="{Binding CanAbort}" ></Button>
+                <Button Content="Build" Click="ApplicationAction" Tag="{Binding}" IsEnabled="{Binding CanBuild}" ></Button>
+                <Button Content="Run" Click="ApplicationAction" Tag="{Binding}" IsEnabled="{Binding CanRun}" ></Button>
+                <Button Content="Build &amp; Run" Click="ApplicationAction" Tag="{Binding}" IsEnabled="{Binding CanBuild}"></Button>
+                <Label Background="Beige" Content="{Binding Status}" Width="99" Margin="10,0"></Label>
+                <Label x:Name="TimeElapsedLabel" Background="Beige" Foreground="White" Content="" Width="93" Margin="-4,0,4,0"></Label>
+                <ComboBox ItemsSource="{Binding BinaryDirectoryChoices}"  Text="{Binding BinaryDirectory}" Width="332" HorizontalAlignment="Left" Margin="0,0,10,-0.4" IsSynchronizedWithCurrentItem="False" FontWeight="Bold"/>
+                <Label Content="-->" HorizontalAlignment="Left" />
+                <Label Content="{Binding OutputDirectory}" Width="332" HorizontalAlignment="Left" />
+            </StackPanel>
         </StackPanel>
     </Grid>
 </UserControl>

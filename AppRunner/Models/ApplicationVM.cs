@@ -51,6 +51,15 @@ namespace AppRunner.Models
             }
         }
 
+        public ObservableCollection<string> BinaryDirectoryChoices
+        {
+            get
+            {
+                return new ObservableCollection<string>(Utilities.FileSystem.GetBinaryDirectories(WorkSpace,Solution));
+            }
+        }
+
+
         #endregion
         public ApplicationVM(bool empty = false)
         {
@@ -68,10 +77,25 @@ namespace AppRunner.Models
         private string _executable;
         [DataMember]
         private string _commandLineArgs;
+        [DataMember]
+        private string _binaryDirectory;
+
+
         public string WorkSpace { get { return _workSpace; } set { _workSpace = value; NotifyPropertyChanged(); NotifyPropertyChanged("SolutionChoices");} }
         public string Executable { get { return _executable; } set { _executable = value; NotifyPropertyChanged(); } }
-        public string Solution { get { return _solution; } set { _solution = value; NotifyPropertyChanged(); } }
+        public string Solution { get { return _solution; } set { _solution = value; NotifyPropertyChanged(); NotifyPropertyChanged("BinaryDirectoryChoices"); } }
         public string CommandLineArgs { get { return _commandLineArgs; } set { _commandLineArgs = value; NotifyPropertyChanged(); } }
+        public string BinaryDirectory { get { return _binaryDirectory; } set { _binaryDirectory = value; NotifyPropertyChanged(); } }
+
+        public string OutputDirectory
+        {
+            get
+            {
+                var path = AppEnvironment.Settings.Path;
+                var mask = Path.GetFileNameWithoutExtension(Solution) + "_" + AppEnvironment.Settings.BuildDir;
+                return FileSystem.GetFirstDirName(path, mask, createDirectory: true);
+            } 
+        }
         //public Solution Solution;
 
 
@@ -143,11 +167,7 @@ namespace AppRunner.Models
             else
                 SolutionObj = new Solution(WorkSpace, Solution);
 
-            var path = AppEnvironment.Settings.Path;
-            var mask = AppEnvironment.Settings.BuildDir;
-            var outputPath = FileSystem.GetFirstDirName(path, mask,createDirectory: true);
-
-            SolutionObj.BuildAsync(outputPath);
+            SolutionObj.BuildAsync(OutputDirectory);
             SetActiveApplication(_parent);
 
             Status = ApplicationStatus.Building;
@@ -160,6 +180,8 @@ namespace AppRunner.Models
 
         public void Run()
         {
+            SetActiveApplication(_parent);
+
             AppEnvironment.Settings.AddToHistory(Executable, CommandLineArgs);
             NotifyPropertyChanged("CommandLineHistory");
 

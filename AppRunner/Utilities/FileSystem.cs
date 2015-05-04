@@ -51,5 +51,15 @@ namespace AppRunner.Utilities
             return dir;
         }
 
+
+        internal static IEnumerable<string> GetBinaryDirectories(string WorkSpace, string Solution)
+        {
+            var dir = Path.GetDirectoryName(WorkSpace + Solution);
+            return Directory.GetFiles(dir, "*.exe", SearchOption.AllDirectories)
+                .Select(Path.GetDirectoryName)
+                .Select(d => d.Replace(dir,""))
+                .OrderBy(d => d)
+                .Distinct();
+        }
     }
 }
