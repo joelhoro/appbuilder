@@ -47,7 +47,8 @@ namespace AppRunner.Models
         {
             get
             {
-                return new ObservableCollection<string>(AppEnvironment.Settings.CommandLineHistory.GetOrDefault(Executable));
+                var executableWithoutExtension = Path.GetFileNameWithoutExtension(Executable);
+                return new ObservableCollection<string>(AppEnvironment.Settings.CommandLineHistory.GetOrDefault(executableWithoutExtension));
             }
         }
 
@@ -82,7 +83,7 @@ namespace AppRunner.Models
 
 
         public string WorkSpace { get { return _workSpace; } set { _workSpace = value; NotifyPropertyChanged(); NotifyPropertyChanged("SolutionChoices");} }
-        public string Executable { get { return _executable; } set { _executable = value; NotifyPropertyChanged(); } }
+        public string Executable { get { return _executable; } set { _executable = value; NotifyPropertyChanged(); NotifyPropertyChanged("CommandLineHistory"); } }
         public string Solution { get { return _solution; } set { _solution = value; NotifyPropertyChanged(); NotifyPropertyChanged("BinaryDirectoryChoices"); } }
         public string CommandLineArgs { get { return _commandLineArgs; } set { _commandLineArgs = value; NotifyPropertyChanged(); } }
         public string BinaryDirectory { get { return _binaryDirectory; } set { _binaryDirectory = value; NotifyPropertyChanged(); } }
@@ -94,9 +95,6 @@ namespace AppRunner.Models
             get { return _outputDirectory; }
             set { _outputDirectory = value; NotifyPropertyChanged(); }
         }
-
-        //public Solution Solution;
-
 
         public void Initialize(ApplicationListVM parent, int idx)
         {
@@ -186,7 +184,7 @@ namespace AppRunner.Models
 
         private string GetNextOutputDirectory()
         {
-            var path = AppEnvironment.Settings.Path;
+            var path = AppEnvironment.Settings.TmpPath;
             var mask = Path.GetFileNameWithoutExtension(Solution) + "_" + AppEnvironment.Settings.BuildDir;
             return FileSystem.GetFirstDirName(path, mask, createDirectory: true);
         }

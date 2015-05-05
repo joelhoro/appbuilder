@@ -1,4 +1,5 @@
-﻿using AppRunner.Models;
+﻿using System.IO;
+using AppRunner.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,16 +18,18 @@ namespace AppRunner.Utilities
         public ObservableCollection<string> Workspaces = new ObservableCollection<string>();
         public List<ApplicationVM> Applications = new List<ApplicationVM>() {new ApplicationVM(empty: true) };
         public Dictionary<string,List<string>> CommandLineHistory = new Dictionary<string, List<string>>();
-        public string Path = @"C:\temp\apprunner";
+        public string TmpPath = @"C:\temp\apprunner";
         public string BuildDir = "Build_{0:d2}";
 
         internal void AddToHistory(string Executable, string commandLineArgs)
         {
-            if(!CommandLineHistory.ContainsKey(Executable))
-                CommandLineHistory[Executable] = new List<string>() {commandLineArgs};
+            var executableWithoutExtension = Path.GetFileNameWithoutExtension(Executable);
+            if (executableWithoutExtension == null) return;
+            if(!CommandLineHistory.ContainsKey(executableWithoutExtension))
+                CommandLineHistory[executableWithoutExtension] = new List<string>() {commandLineArgs};
 
-            if(!CommandLineHistory[Executable].Contains(commandLineArgs))
-                CommandLineHistory[Executable].Add(commandLineArgs);
+            if(!CommandLineHistory[executableWithoutExtension].Contains(commandLineArgs))
+                CommandLineHistory[executableWithoutExtension].Add(commandLineArgs);
         }
     }
 
