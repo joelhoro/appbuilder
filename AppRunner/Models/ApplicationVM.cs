@@ -167,13 +167,20 @@ namespace AppRunner.Models
             else
                 SolutionObj = new Solution(WorkSpace, Solution);
 
-            SolutionObj.BuildAsync(OutputDirectory);
+            SolutionObj.ExecutionCompleted += (s, e) => {
+                var buildResults = BuildResults.FromOutput(SolutionObj.Output);
+                StatusMessage = buildResults.ToString();
+                if (buildResults.Success)
+                    Status = ApplicationStatus.BuildCompleted;
+                else
+                    Status = ApplicationStatus.BuildFailed;
+            };
+
+            var binaries = WorkSpace + Path.GetDirectoryName(Solution) + BinaryDirectory;
+            SolutionObj.BuildAsync(binaries, OutputDirectory);
             SetActiveApplication(_parent);
 
             Status = ApplicationStatus.Building;
-            SolutionObj.ExecutionCompleted += (s, e) => { 
-                Status = ApplicationStatus.BuildCompleted;
-            };
         }
 
         public Executable ExecutableObj;
@@ -199,6 +206,13 @@ namespace AppRunner.Models
             };
         }
 
+        private string _statusMessage;
+
+        public string StatusMessage
+        {
+            get { return _statusMessage; }
+            set { _statusMessage = value; NotifyPropertyChanged(); }
+        }
 
         public string Description { get { return ToString(); } }
 
@@ -219,7 +233,7 @@ namespace AppRunner.Models
             if(Status == ApplicationStatus.Building)
                 return "Building {0}".With(SolutionObj);
             else if (Status == ApplicationStatus.BuildCompleted)
-                return "Build failed!";
+                return "Build completed";
             else
                 return "[{0}] {1} {2}".With(WorkSpace, Executable, CommandLineArgs);
         }

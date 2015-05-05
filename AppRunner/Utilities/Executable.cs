@@ -81,7 +81,7 @@ namespace AppRunner.Utilities
         {
             if (IsRunning())
                 throw new Exception("Can not run more than one process at a time");
-            StartInfo.Arguments = commandLineArgs.Replace("\"", "\\\"");
+            StartInfo.Arguments = commandLineArgs;//.Replace("\"", "\\\"");
             AddOutputHandler(eventHandler);
             Start();
             // Create a task that waits for the end and sends an ExecutionCompleted event when done

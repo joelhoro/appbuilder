@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.IO.IsolatedStorage;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
+using System.Windows.Documents;
 
 namespace AppRunner.Utilities
 {
@@ -34,7 +38,7 @@ namespace AppRunner.Utilities
 
     public interface ISolution : IExecutable
     {
-        void BuildAsync(string outputPath);
+        void BuildAsync(string binaryDirectory, string outputPath);
         string FullPathName { get; }
 
     }
@@ -49,7 +53,7 @@ namespace AppRunner.Utilities
             FullPathName = String.Format(@"{0}\src\{1}\{1}.sln", root, solutionName);
         }
 
-        public void BuildAsync(string outputPath) 
+        public void BuildAsync(string binaryDirectory, string outputPath) 
         {
             var args = "5 Testing";
             RunAsync(args);
@@ -59,6 +63,8 @@ namespace AppRunner.Utilities
     public class Solution : Executable, ISolution
     {
         public string FullPathName { get; set; }
+        public List<string> Binaries = new List<string>();
+
         public Solution(string fullPathName) : base(AppEnvironment.Settings.MsBuildPath)
         {
             FullPathName = fullPathName;
@@ -76,11 +82,38 @@ namespace AppRunner.Utilities
         /// <param name="executableName"></param>
         /// <param name="verbose"></param>
         /// <returns></returns>
-        public void BuildAsync(string outputPath)
+        public void BuildAsync(string binaryDirectory, string outputPath)
         {
-            InitializeOutputBuilder();
             var args = String.Format(@"""{0}""", FullPathName);
-            RunAsync(FullPathName);
+            Binaries = new List<string>();
+            OutputDataReceived += CaptureBinaries;
+            ExecutionCompleted += MoveToOutputPath(binaryDirectory, outputPath);
+            RunAsync(args);
+
+        }
+
+        private ExecutionCompletedHandler MoveToOutputPath(string from, string to)
+        {
+            return (sender, args) =>
+            {
+                var process = new Process();
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.FileName = "xcopy.exe";
+                process.StartInfo.Arguments = string.Format(@"""{0}"" ""{1}"" /E /I /Y",from, to);
+                process.Start();
+            };
+
+        }
+
+
+        private void CaptureBinaries(object sender, DataReceivedEventArgs e)
+        {
+            if (e.Data == null) return;
+            var regex = new Regex("(.*) -> (.*)");
+
+            var match = regex.Match(e.Data);
+            if (match.Success)
+                Binaries.Add(match.Groups[2].Value);
         }
 
     }
