@@ -87,15 +87,14 @@ namespace AppRunner.Models
         public string CommandLineArgs { get { return _commandLineArgs; } set { _commandLineArgs = value; NotifyPropertyChanged(); } }
         public string BinaryDirectory { get { return _binaryDirectory; } set { _binaryDirectory = value; NotifyPropertyChanged(); } }
 
+        private string _outputDirectory ;
+
         public string OutputDirectory
         {
-            get
-            {
-                var path = AppEnvironment.Settings.Path;
-                var mask = Path.GetFileNameWithoutExtension(Solution) + "_" + AppEnvironment.Settings.BuildDir;
-                return FileSystem.GetFirstDirName(path, mask, createDirectory: true);
-            } 
+            get { return _outputDirectory; }
+            set { _outputDirectory = value; NotifyPropertyChanged(); }
         }
+
         //public Solution Solution;
 
 
@@ -160,13 +159,14 @@ namespace AppRunner.Models
 
         public ISolution SolutionObj;
 
-        public void Build()
+        public void Build(ExecutionCompletedHandler handler = null)
         {
             if(AppEnvironment.Settings.TestMode)
                 SolutionObj = new DummySolution(WorkSpace,Solution);
             else
                 SolutionObj = new Solution(WorkSpace, Solution);
 
+            SolutionObj.ExecutionCompleted += handler;
             SolutionObj.ExecutionCompleted += (s, e) => {
                 var buildResults = BuildResults.FromOutput(SolutionObj.Output);
                 StatusMessage = buildResults.ToString();
@@ -177,10 +177,18 @@ namespace AppRunner.Models
             };
 
             var binaries = WorkSpace + Path.GetDirectoryName(Solution) + BinaryDirectory;
+            OutputDirectory = GetNextOutputDirectory();
             SolutionObj.BuildAsync(binaries, OutputDirectory);
             SetActiveApplication(_parent);
 
             Status = ApplicationStatus.Building;
+        }
+
+        private string GetNextOutputDirectory()
+        {
+            var path = AppEnvironment.Settings.Path;
+            var mask = Path.GetFileNameWithoutExtension(Solution) + "_" + AppEnvironment.Settings.BuildDir;
+            return FileSystem.GetFirstDirName(path, mask, createDirectory: true);
         }
 
         public Executable ExecutableObj;
@@ -192,18 +200,23 @@ namespace AppRunner.Models
             AppEnvironment.Settings.AddToHistory(Executable, CommandLineArgs);
             NotifyPropertyChanged("CommandLineHistory");
 
-            var executableFullPath = WorkSpace + Solution + Executable;
+            var executableFullPath = OutputDirectory + @"\"+ Executable;
             if(AppEnvironment.Settings.TestMode)
                 executableFullPath = @"DummyExe.exe";
 
             var commandLineExpanded = Extensions.ExpandCommandLine(CommandLineArgs);
             ExecutableObj = new Executable(executableFullPath);
             Status = ApplicationStatus.Running;
-            ExecutableObj.RunAsync("15 Test running with " + commandLineExpanded);
+            ExecutableObj.RunAsync(commandLineExpanded);
             ExecutableObj.ExecutionCompleted += (s, e) =>
             {
                 Status = ApplicationStatus.BuildCompleted;
             };
+        }
+
+        internal void BuilAndRun()
+        {
+            Build((s,e) => Run());
         }
 
         private string _statusMessage;

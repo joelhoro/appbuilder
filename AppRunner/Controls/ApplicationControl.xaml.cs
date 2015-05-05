@@ -57,6 +57,11 @@ namespace AppRunner.Controls
                 app.Run();
                 StartTimer(app,app.ExecutableObj);
             }
+            else if (action == "Build & Run")
+            {
+                app.BuilAndRun();
+                StartTimer(app, app.SolutionObj as Executable);
+            }
         }
 
         private void StartTimer(ApplicationVM app, Executable executable)

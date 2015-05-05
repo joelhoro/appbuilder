@@ -89,7 +89,6 @@ namespace AppRunner.Utilities
             OutputDataReceived += CaptureBinaries;
             ExecutionCompleted += MoveToOutputPath(binaryDirectory, outputPath);
             RunAsync(args);
-
         }
 
         private ExecutionCompletedHandler MoveToOutputPath(string from, string to)
