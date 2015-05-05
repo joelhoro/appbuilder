@@ -185,7 +185,7 @@ namespace AppRunner.Models
         private string GetNextOutputDirectory()
         {
             var path = AppEnvironment.Settings.TmpPath;
-            var mask = Path.GetFileNameWithoutExtension(Solution) + "_" + AppEnvironment.Settings.BuildDir;
+            var mask = string.Format(AppEnvironment.Settings.BuildDir, Path.GetFileNameWithoutExtension(Solution) );
             return FileSystem.GetFirstDirName(path, mask, createDirectory: true);
         }
 

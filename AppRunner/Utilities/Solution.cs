@@ -72,7 +72,12 @@ namespace AppRunner.Utilities
 
         public Solution(string root, string solutionName) : base(AppEnvironment.Settings.MsBuildPath)
         {
-            FullPathName = String.Format(@"{0}{1}", root, solutionName);
+            FullPathName = @"{0}{1}".With(root, solutionName);
+        }
+
+        public override string ToString()
+        {
+            return "Solution: {0}".With(FullPathName);
         }
 
         /// <summary>
