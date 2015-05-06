@@ -59,7 +59,7 @@ namespace AppRunner.Controls
             }
             else if (action == "Build & Run")
             {
-                app.BuilAndRun();
+                app.BuildAndRun();
                 StartTimer(app, app.SolutionObj as Executable);
             }
         }

@@ -212,7 +212,7 @@ namespace AppRunner.Models
             };
         }
 
-        internal void BuilAndRun()
+        internal void BuildAndRun()
         {
             Build((s,e) => Run());
         }
