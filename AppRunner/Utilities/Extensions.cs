@@ -60,6 +60,7 @@ namespace AppRunner.Utilities
             var replacements = new List<Tuple<string, Func<string, string>>>()
             {
                 Tuple.Create<string, Func<string, string>>("{d:(.*?)}", arg => DateTime.Today.ToString(arg as string)),
+                Tuple.Create<string, Func<string, string>>("{d-1:(.*?)}", arg => ( DateTime.Today.AddDays(-1)).ToString(arg as string)),
                 Tuple.Create<string, Func<string, string>>(@"{user}", arg => Environment.UserName)
             };
 
