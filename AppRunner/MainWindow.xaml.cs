@@ -22,7 +22,8 @@ namespace AppRunner
             AppEnvironment.LoadSettings();
             var appListViewModel =  ApplicationListVM.Create(AppEnvironment.Settings.Applications);
             AppListControl.DataContext = appListViewModel;
-            LogFileControl.SetContext(appListViewModel);
+            BuildLogControl.SetContext(appListViewModel);
+            RunLogControl.SetContext(appListViewModel);
         }
 
         private void MenuItemClick(object sender, RoutedEventArgs evt)

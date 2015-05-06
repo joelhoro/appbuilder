@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Windows;
 using System.Windows.Documents;
 
 namespace AppRunner.Utilities
@@ -100,10 +101,19 @@ namespace AppRunner.Utilities
         {
             return (sender, args) =>
             {
-                var process = new Process();
-                process.StartInfo.UseShellExecute = false;
-                process.StartInfo.FileName = "xcopy.exe";
-                process.StartInfo.Arguments = string.Format(@"""{0}"" ""{1}"" /E /I /Y",from, to);
+                // should really use executable.Run()
+                var process = new Process()
+                {
+                    StartInfo = new ProcessStartInfo()
+                    {
+                        FileName = "xcopy.exe",
+                        Arguments = string.Format(@"""{0}"" ""{1}"" /E /I /Y", from, to),
+                        CreateNoWindow = true,
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true
+                    }
+                };
+
                 process.Start();
             };
 

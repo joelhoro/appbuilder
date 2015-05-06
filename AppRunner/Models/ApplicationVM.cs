@@ -122,6 +122,8 @@ namespace AppRunner.Models
                 NotifyPropertyChanged("CanBuildRun");
                 NotifyPropertyChanged("CanAbort");
                 NotifyPropertyChanged("Description");
+                NotifyPropertyChanged("IsBuilding");
+                NotifyPropertyChanged("IsRunning");
             }
         }
 
@@ -159,6 +161,7 @@ namespace AppRunner.Models
 
         public void Build(ExecutionCompletedHandler handler = null)
         {
+            Status = ApplicationStatus.Building;
             if(AppEnvironment.Settings.TestMode)
                 SolutionObj = new DummySolution(WorkSpace,Solution);
             else
@@ -226,14 +229,39 @@ namespace AppRunner.Models
         }
 
         public string Description { get { return ToString(); } }
+        public bool IsBuilding { 
+            get 
+            { 
+                    return Status == ApplicationStatus.Building 
+                        || Status == ApplicationStatus.BuildCompleted
+                        || Status == ApplicationStatus.BuildFailed;
+            }
+        }
 
-        public string Output
+        public bool IsRunnning { 
+            get
+            {
+                return new[] {ApplicationStatus.Running, ApplicationStatus.Completed}.Contains(Status);
+            } 
+        }
+
+        public string BuildOutput
         {
             get
             {
-                if (Status == ApplicationStatus.Running || Status == ApplicationStatus.Completed) return ExecutableObj.Output;
                 if (SolutionObj != null)
                     return SolutionObj.Output;
+                else
+                    return "<idle>";
+            }
+        }
+
+        public string RunOutput
+        {
+            get
+            {
+                if (ExecutableObj != null)
+                    return ExecutableObj.Output;
                 else
                     return "<idle>";
             }

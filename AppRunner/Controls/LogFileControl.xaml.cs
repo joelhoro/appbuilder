@@ -34,6 +34,7 @@ namespace AppRunner.Controls
             (DataContext as ApplicationVM).Run();
         }
 
+        public string Component { get; set; }
         
         internal void ScrollToEnd()
         {
@@ -68,8 +69,17 @@ namespace AppRunner.Controls
                     if (ColorDictionary.ContainsKey(app.Status))
                         colors = ColorDictionary[app.Status];
 
-                    MainTextBox.Text = applicationList.ActiveApplication.Output;
-                    MainTextBox.ScrollToEnd();
+                    string output;
+                    if (Component == "Build")
+                        output = applicationList.ActiveApplication.BuildOutput;
+                    else if (Component == "Run")
+                        output = applicationList.ActiveApplication.RunOutput;
+                    else
+                        throw new Exception("No component " + Component);
+
+                    MainTextBox.Text = output;
+                    if((bool)ScrollToEndCheckBox.IsChecked)
+                        MainTextBox.ScrollToEnd();
 
                     MainTextBox.Background = colors.Item1;
                     MainTextBox.Foreground = colors.Item2;
@@ -88,5 +98,12 @@ namespace AppRunner.Controls
             //        _dispatcherTimer = null;
             //    }));
         }
+
+    private void DisableScrolling(object sender, MouseEventArgs e)
+    {
+        ScrollToEndCheckBox.IsChecked = false;
+
+    }
+
     }
 }
