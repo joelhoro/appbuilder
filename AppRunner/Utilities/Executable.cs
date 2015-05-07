@@ -90,6 +90,7 @@ namespace AppRunner.Utilities
             }
             catch( Exception E)
             {
+                var message = "Cannot start {0} {1}: {2}".With(FileName, commandLineArgs, E.ToString());
                 MessageBox.Show(message);
             }
             // Create a task that waits for the end and sends an ExecutionCompleted event when done
