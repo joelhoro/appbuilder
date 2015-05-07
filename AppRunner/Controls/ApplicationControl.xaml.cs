@@ -57,6 +57,11 @@ namespace AppRunner.Controls
                 app.Run();
                 StartTimer(app,app.ExecutableObj);
             }
+            else if (action == "Build & Run")
+            {
+                app.BuildAndRun();
+                StartTimer(app, app.SolutionObj as Executable);
+            }
         }
 
         private void StartTimer(ApplicationVM app, Executable executable)
@@ -77,5 +82,11 @@ namespace AppRunner.Controls
                 (s, e) => Dispatcher.BeginInvoke(new Action(() => { TimeElapsedLabel.Background = Brushes.CornflowerBlue; }));
         }
 
+        private void EnterExecutableChoices(object sender, MouseEventArgs e)
+        {
+            var app = (sender as ComboBox).Tag as ApplicationVM;
+            app.RefreshDropDowns();
+
+        }
     }
 }
