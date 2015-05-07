@@ -27,7 +27,7 @@
 
                 <ComboBox ItemsSource="{Binding WorkSpaceChoices}"  Text="{Binding WorkSpace}" Width="332" HorizontalAlignment="Left" Margin="0,0,10,-0.4" IsSynchronizedWithCurrentItem="False" FontWeight="Bold"/>
                 <ComboBox ItemsSource="{Binding SolutionChoices}" Text="{Binding Solution}" Width="309" HorizontalAlignment="Left" IsEditable="True" Margin="0,0,5,-0.4" IsSynchronizedWithCurrentItem="False" FontWeight="Bold"/>
-                <ComboBox ItemsSource="{Binding ExecutableChoices}" Text="{Binding Executable}" Width="118" HorizontalAlignment="Left" IsEditable="True" Margin="0,0,5,-0.4" IsSynchronizedWithCurrentItem="False" FontWeight="Bold"/>
+                <ComboBox ItemsSource="{Binding ExecutableChoices}" Tag="{Binding}" MouseEnter="EnterExecutableChoices" Text="{Binding Executable}" Width="118" HorizontalAlignment="Left" IsEditable="True" Margin="0,0,5,-0.4" IsSynchronizedWithCurrentItem="False" FontWeight="Bold"/>
                 <ComboBox ItemsSource="{Binding CommandLineHistory}" Text="{Binding CommandLineArgs}" Width="345" HorizontalAlignment="Left" IsEditable="True" Margin="0,0,5,-0.4" IsSynchronizedWithCurrentItem="False" FontWeight="Bold"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal"  Grid.ColumnSpan="2" Margin="5">

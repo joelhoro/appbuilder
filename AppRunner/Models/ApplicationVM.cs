@@ -42,6 +42,17 @@ namespace AppRunner.Models
                 return AppEnvironment.Settings.Workspaces;
             }
         }
+        public ObservableCollection<string> ExecutableChoices
+        {
+            get
+            {
+                var exes = new string[] {};
+                if (OutputDirectory != null)
+                    exes = Directory.GetFiles(OutputDirectory, "*.exe");
+
+                return new ObservableCollection<string>(exes.Select(f => f.Replace(OutputDirectory,"")));
+            }
+        }
 
         public ObservableCollection<string> CommandLineHistory
         {
@@ -83,8 +94,8 @@ namespace AppRunner.Models
 
 
         public string WorkSpace { get { return _workSpace; } set { _workSpace = value; NotifyPropertyChanged(); NotifyPropertyChanged("SolutionChoices");} }
-        public string Executable { get { return _executable; } set { _executable = value; NotifyPropertyChanged(); NotifyPropertyChanged("CommandLineHistory"); } }
-        public string Solution { get { return _solution; } set { _solution = value; NotifyPropertyChanged(); NotifyPropertyChanged("BinaryDirectoryChoices"); } }
+        public string Executable { get { return _executable; } set { _executable = value; NotifyPropertyChanged(); NotifyPropertyChanged("CommandLineHistory"); NotifyPropertyChanged("CanRun"); } }
+        public string Solution { get { return _solution; } set { _solution = value; NotifyPropertyChanged(); NotifyPropertyChanged("BinaryDirectoryChoices"); NotifyPropertyChanged("CanBuild"); } }
         public string CommandLineArgs { get { return _commandLineArgs; } set { _commandLineArgs = value; NotifyPropertyChanged(); } }
         public string BinaryDirectory { get { return _binaryDirectory; } set { _binaryDirectory = value; NotifyPropertyChanged(); } }
 
@@ -93,7 +104,7 @@ namespace AppRunner.Models
         public string OutputDirectory
         {
             get { return _outputDirectory; }
-            set { _outputDirectory = value; NotifyPropertyChanged(); }
+            set { _outputDirectory = value; NotifyPropertyChanged(); NotifyPropertyChanged("ExecutableChoices"); }
         }
 
         public void Initialize(ApplicationListVM parent, int idx)
@@ -139,11 +150,11 @@ namespace AppRunner.Models
        
         public bool CanBuild
         {
-            get { return CanBuildStages.Contains(Status); }
+            get { return CanBuildStages.Contains(Status) && Solution != ""; }
         }
         public bool CanRun
         {
-            get { return CanRunStages.Contains(Status); }
+            get { return CanRunStages.Contains(Status) && Executable != ""; }
         }
         public bool CanAbort
         {
@@ -282,6 +293,11 @@ namespace AppRunner.Models
             AppListVm.ActiveApplication = this;
             AppListVm.ApplicationList
                 .ForEach(a => a.NotifyPropertyChanged("IsActiveApplication"));
+        }
+
+        internal void RefreshDropDowns()
+        {
+            NotifyPropertyChanged("ExecutableChoices");
         }
     }
 }

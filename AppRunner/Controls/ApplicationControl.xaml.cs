@@ -81,5 +81,12 @@ namespace AppRunner.Controls
             executable.ExecutionCompleted +=
                 (s, e) => Dispatcher.BeginInvoke(new Action(() => { TimeElapsedLabel.Background = Brushes.CornflowerBlue; }));
         }
+
+        private void EnterExecutableChoices(object sender, MouseEventArgs e)
+        {
+            var app = (sender as ComboBox).Tag as ApplicationVM;
+            app.RefreshDropDowns();
+
+        }
     }
 }
