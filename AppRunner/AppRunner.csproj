@@ -85,9 +85,7 @@
     <Compile Include="Utilities\FileSystem.cs" />
     <Compile Include="Utilities\JsonSerializer.cs" />
     <Compile Include="Utilities\Shell.cs" />
-    <Compile Include="Utilities\Solution.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="Utilities\Solution.cs" />
     <Compile Include="Utilities\UserSettings.cs" />
     <Page Include="Controls\ApplicationListControl.xaml">
       <SubType>Designer</SubType>

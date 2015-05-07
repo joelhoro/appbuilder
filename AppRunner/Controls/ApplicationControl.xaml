@@ -38,8 +38,8 @@
                 <Label Background="Beige" Content="{Binding Status}" Width="99" Margin="10,0"></Label>
                 <Label x:Name="TimeElapsedLabel" Background="Beige" Foreground="White" Content="" Width="93" Margin="-4,0,4,0"></Label>
                 <ComboBox ItemsSource="{Binding BinaryDirectoryChoices}"  Text="{Binding BinaryDirectory}" Width="332" HorizontalAlignment="Left" Margin="0,0,10,-0.4" IsSynchronizedWithCurrentItem="False" FontWeight="Bold"/>
-                <Label Content="-->" HorizontalAlignment="Left" />
-                <Label Content="{Binding OutputDirectory}" Width="332" HorizontalAlignment="Left" />
+                <Label Content="-->" HorizontalAlignment="Left" Background="Beige" />
+                <Label Content="{Binding OutputDirectory}" Width="298" Background="Beige" HorizontalAlignment="Left" />
             </StackPanel>
         </StackPanel>
     </Grid>

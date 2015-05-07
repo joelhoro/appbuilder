@@ -27,15 +27,20 @@ namespace AppRunner.Models
 
         public event ActiveApplicationChangeEventHandler ActiveApplicationChangeEvent;
 
-        public static ApplicationListVM Create(IEnumerable<ApplicationVM> applicationModels)
+        public static ApplicationListVM Create(IEnumerable<ApplicationVM> applicationModels, int minimum = 1)
         {
             var listModel = new ApplicationListVM();
             var i = 0;
-            applicationModels
+            var models = applicationModels.ToList();
+            while(models.Count()<minimum) {
+                models.Add(new ApplicationVM(empty: true));
+            }
+                
+            models
                 .Select(a => { a.Initialize(listModel,i++); return true; })
                 .ToList();
 
-            listModel.ApplicationList = new ObservableCollection<ApplicationVM>(applicationModels);
+            listModel.ApplicationList = new ObservableCollection<ApplicationVM>(models);
             return listModel;
         }
 

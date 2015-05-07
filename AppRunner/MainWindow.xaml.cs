@@ -20,7 +20,7 @@ namespace AppRunner
         public void LoadSettings()
         {
             AppEnvironment.LoadSettings();
-            var appListViewModel =  ApplicationListVM.Create(AppEnvironment.Settings.Applications);
+            var appListViewModel =  ApplicationListVM.Create(AppEnvironment.Settings.Applications, minimum : 3);
             AppListControl.DataContext = appListViewModel;
             BuildLogControl.SetContext(appListViewModel);
             RunLogControl.SetContext(appListViewModel);
