@@ -69,23 +69,35 @@ namespace AppRunner.Controls
                     if (ColorDictionary.ContainsKey(app.Status))
                         colors = ColorDictionary[app.Status];
 
-                    string output;
+                    // we should check that the tab we are in is selected...
+                    bool isActive;
+                    string output = "";
                     if (Component == "Build")
-                        output = applicationList.ActiveApplication.BuildOutput;
+                    {
+                        isActive = app.IsBuilding;
+                        if(isActive)
+                            output = app.BuildOutput;
+                    }
                     else if (Component == "Run")
-                        output = applicationList.ActiveApplication.RunOutput;
+                    {
+                        isActive = app.IsRunnning;
+                        if(isActive)
+                            output = app.RunOutput;
+                    }
                     else
                         throw new Exception("No component " + Component);
 
-                    MainTextBox.Text = output;
-                    if((bool)ScrollToEndCheckBox.IsChecked)
+                    if(isActive)
+                        MainTextBox.Text = output;
+
+                    if((bool)ScrollToEndCheckBox.IsChecked && isActive)
                         MainTextBox.ScrollToEnd();
 
                     MainTextBox.Background = colors.Item1;
                     MainTextBox.Foreground = colors.Item2;
                 }
             });
-            _dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 250);
+            _dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 10);
             _dispatcherTimer.Start();
 
             //application.SolutionObj.ExecutionCompleted += (s,e) =>

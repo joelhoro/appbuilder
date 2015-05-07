@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Xml;
 
 namespace AppRunner.Utilities
@@ -33,13 +34,13 @@ namespace AppRunner.Utilities
                 };
         }
 
-        public StringBuilder OutputBuilder = new StringBuilder();
+        public StringBuilder OutputBuilder = new StringBuilder(200000);
 
         public string Output { get { return OutputBuilder.ToString(); } }
 
         public void InitializeOutputBuilder()
         {
-            OutputBuilder = new StringBuilder();
+            OutputBuilder = new StringBuilder(200000);
             AddOutputHandler((sender, args) => OutputBuilder.AppendLine(args.Data));
         }
 
@@ -83,7 +84,14 @@ namespace AppRunner.Utilities
                 throw new Exception("Can not run more than one process at a time");
             StartInfo.Arguments = commandLineArgs;//.Replace("\"", "\\\"");
             AddOutputHandler(eventHandler);
-            Start();
+            try
+            {
+                Start();
+            }
+            catch( Exception E)
+            {
+                MessageBox.Show(message);
+            }
             // Create a task that waits for the end and sends an ExecutionCompleted event when done
             // (couldn't make the Exited event to work for some reason)
             Task.Run(() =>
